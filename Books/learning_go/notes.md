@@ -29,7 +29,7 @@ go install github.com/go-delve/delve/cmd/dlv@latest # Install Delve debugger
 
 ## General Notes
 
-**The Semicolon Insertion Rule**
+### The Semicolon Insertion Rule
 - Go developers should never put semicolons at the end of lines, as Go inserts them automatically.
 ```Go
 // Correct
@@ -44,3 +44,14 @@ func main(); {
 ```
 
 Use `go fmt` to format your code. It automatically inserts semicolons where needed.
+
+### Predeclared Types
+
+- Predeclared types are types that are built into the Go language. 
+- Here's the list of the predeclared types:
+ 
+
+
+
+
+  - The Zero Value: Go assigns a default *zero* value to variables that are declared but not initialized. See [The zero value](https://go.dev/ref/spec#The_zero_value)
