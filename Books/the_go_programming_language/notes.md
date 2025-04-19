@@ -1,6 +1,6 @@
 # My Notes from "The Go Programming Language" by Alan A. A. Donovan and Brian W. Kernighan
 
-<img src='20250419135706.png' width='350'/>
+<img src='images/20250419135706.png' width='350'/>
 
 <details>
 <summary>Book Resources</summary>
@@ -10,15 +10,17 @@
 
 </details>
 
----
 
 ## Overview and History of Go
+
+<details>
+<summary>Overview and History of Go</summary>
 
 - **Conception**: Go was conceived in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson at Google and was publicly announced in 2009.
 
 - **Influencers of Go**:
   
-  <img src='20250419140256.png' width='400'/>
+  <img src='images/20250419140256.png' width='400'/>
 
   - **C**: Syntax, control structures, basic data types, call-by-value parameter passing, pointers, and emphasis on compiling to machine code.
   - **Modula-2**: Inspired the package concept.
@@ -28,8 +30,6 @@
   - **Squeak**: Provided handling for mouse and keyboard events, with statically created channels.
   - **Newsqueak**: A purely functional language with garbage collection, aimed at managing keyboard, mouse, and window events.
   - **Alef**: Attempted to make Newsqueak a viable system programming language, but its lack of garbage collection made concurrency too painful.
-
----
 
 ### The Go Project
 
@@ -58,3 +58,5 @@
     - No macros.
     - No function annotations.
     - No thread-local storage.
+
+</details>
