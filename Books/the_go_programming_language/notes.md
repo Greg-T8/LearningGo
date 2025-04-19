@@ -97,40 +97,77 @@ package main
 - You must import *exactly* the packages you need. The Go compiler will not compile a package if it is not used in the code.
 - Go does not require semicolons; they are automatically inserted at the end of lines.
 
-### Command-Line Arguments
+## Command-Line Arguments
 
-**Slices**:
-- The variable `os.Args` is a slice of strings.
-- The first element of `os.Args`, `os.Args[0]`, is the name of the command.
-- The other elements, `os.Args[1:len(os.Args)]`, are the command-line arguments passed to the program.
+<details>
+<summary>Command-Line Arguments</summary>
 
-- The following program mimics echos the command-line arguments passed to it:
+- The `os.Args` variable is a slice of strings containing the command-line arguments.
+    - `os.Args[0]` is the name of the command.
+    - `os.Args[1:]` contains the arguments passed to the program.
 
-```Go
-package main
+- Example: Concatenating and printing command-line arguments (index-based loop):
 
-import (
-	"fmt"
-	"os"
-)
+    ```go
+    package main
 
-func main() {
-	// Initialize empty string variables for the result and separator
-	var s, sep string
-	// Iterate over command-line arguments (excluding the program name)
-	for i := 1; i < len(os.Args); i++ {
-		s += sep + os.Args[i]
-		sep = " "
-	}
-	// Print the concatenated arguments
-	fmt.Println(s)
-}
-```
+    import (
+        "fmt"
+        "os"
+    )
 
-See [02-echo1.go](./ch01/02-echo1.go) for the complete code.
+    func main() {
+        var s, sep string
+        for i := 1; i < len(os.Args); i++ {
+            s += sep + os.Args[i]
+            sep = " "
+        }
+        fmt.Println(s)
+    }
+    ```
 
-Things to note:
-- The `var` declaration declares two variables, `s` and `sep`. 
-- If the variable is not explicitly initialized, it is implicitly initialized to the zero value of its type. For strings, the zero value is an empty string `""`.
-- The `+` operator concatenates strings.
-- 
+    - `var` declares variables; uninitialized variables get the zero value (`""` for strings).
+    - The `+` operator concatenates strings.
+    - `:=` is the short variable declaration, inferring the type.
+    - `i++` is the only increment operator (no prefix form).
+    - Parentheses are not used in the `for` statement.
+    - Braces are required, and the opening brace must be on the same line as the `for`.
+    - Any part of the `for` statement (init, condition, post) can be omitted.
+
+- Example: Using a range-based for loop:
+
+    ```go
+    package main
+
+    import (
+        "fmt"
+        "os"
+    )
+
+    func main() {
+        s, sep := "", ""
+        for _, arg := range os.Args[1:] {
+            s += sep + arg
+            sep = " "
+        }
+        fmt.Println(s)
+    }
+    ```
+
+    - Each iteration of the `range` loop provides the index and value.
+    - The blank identifier `_` is used to ignore the index when not needed.
+
+- Variable declaration styles:
+
+    ```go
+    s := ""             // short variable declaration
+    var s string        // var declaration
+    var s = ""          // var declaration with initialization
+    var s string = ""   // var declaration with type and initialization
+    ```
+
+    - `:=` can only be used inside functions.
+    - The second form uses the zero value for initialization.
+    - The third and fourth forms are more explicit but less common in practice.
+
+</details>
