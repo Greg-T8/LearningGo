@@ -10,6 +10,14 @@
 
 </details>
 
+## Go Commands 
+
+```Go
+go run hello.go         // Run the program hello.go
+go build hello.go       // Build the program hello.go into an executable file
+
+```
+
 
 ## Overview and History of Go
 
@@ -60,3 +68,69 @@
     - No thread-local storage.
 
 </details>
+
+## Hello World
+
+The following program can be compiled and ran with `go run hello.go`:
+
+```
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, world!")
+}
+```
+
+The command `go build hello.go` creates an executable file.
+
+## Go Basics
+
+- Go code is organized into packages, which are similar to libraries or modules in other languages.
+- Each source file begins with a package declaration, which states the package the file belongs go.
+
+```Go
+package main
+```
+
+- You must import *exactly* the packages you need. The Go compiler will not compile a package if it is not used in the code.
+- Go does not require semicolons; they are automatically inserted at the end of lines.
+
+### Command-Line Arguments
+
+**Slices**:
+- The variable `os.Args` is a slice of strings.
+- The first element of `os.Args`, `os.Args[0]`, is the name of the command.
+- The other elements, `os.Args[1:len(os.Args)]`, are the command-line arguments passed to the program.
+
+- The following program mimics echos the command-line arguments passed to it:
+
+```Go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	// Initialize empty string variables for the result and separator
+	var s, sep string
+	// Iterate over command-line arguments (excluding the program name)
+	for i := 1; i < len(os.Args); i++ {
+		s += sep + os.Args[i]
+		sep = " "
+	}
+	// Print the concatenated arguments
+	fmt.Println(s)
+}
+```
+
+See [02-echo1.go](./ch01/02-echo1.go) for the complete code.
+
+Things to note:
+- The `var` declaration declares two variables, `s` and `sep`. 
+- If the variable is not explicitly initialized, it is implicitly initialized to the zero value of its type. For strings, the zero value is an empty string `""`.
+- The `+` operator concatenates strings.
+- 
