@@ -69,7 +69,7 @@ go build hello.go       // Build the program hello.go into an executable file
 
 </details>
 
-## Hello World
+## 1. Tutorial
 
 The following program can be compiled and ran with `go run hello.go`:
 
@@ -85,8 +85,6 @@ func main() {
 
 The command `go build hello.go` creates an executable file.
 
-## Go Basics
-
 - Go code is organized into packages, which are similar to libraries or modules in other languages.
 - Each source file begins with a package declaration, which states the package the file belongs go.
 
@@ -97,10 +95,10 @@ package main
 - You must import *exactly* the packages you need. The Go compiler will not compile a package if it is not used in the code.
 - Go does not require semicolons; they are automatically inserted at the end of lines.
 
-## Command-Line Arguments
+### 1.2 Command-Line Arguments
 
 <details>
-<summary>Command-Line Arguments</summary>
+<summary>Expand</summary>
 
 - The `os.Args` variable is a slice of strings containing the command-line arguments.
     - `os.Args[0]` is the name of the command.
@@ -171,3 +169,9 @@ package main
     - The third and fourth forms are more explicit but less common in practice.
 
 </details>
+
+### 1.3 Funding Duplicate Lines
+
+This section covers three variants of a program called `dup`, partially inspired by the Unix command `uniq`, which looks for adjacent duplicate lines.
+
+**`Dup` Version 1**: prints each line that appears more than once in the input, preceeded by its count.
