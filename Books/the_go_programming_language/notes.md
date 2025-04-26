@@ -240,3 +240,116 @@ counts[line] = counts[line] + 1
 | %T         | type of any value                     |
 | %%         | literal percent sign (no operand)     |
 - `printf` does not add a newline at the end of the output, so you need to add it manually with `\n`.
+
+
+**`Dup` Version 2**: reads from files and counts duplicate lines.
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+// main creates a map to track line counts, processes input from stdin or files,
+// and then displays any lines that appear more than once
+func main() {
+	counts := make(map[string]int)
+	files := os.Args[1:]
+	if len(files) == 0 {
+		countLines(os.Stdin, counts)
+	} else {
+		for _, arg := range files {
+			f, err := os.Open(arg)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
+				continue
+			}
+			countLines(f, counts)
+			f.Close()
+		}
+	}
+	for line, n := range counts {
+		if n > 1 {
+			fmt.Printf("%d\t%s\n", n, line)
+		}
+	}
+}
+
+// countLines reads input lines from a file and counts occurrences in the map
+func countLines(f *os.File, counts map[string]int) {
+	input := bufio.NewScanner(f)
+	for input.Scan() {
+		counts[input.Text()]++
+	}
+	// NOTE: ignoring potential errors from input.Err()
+}
+```
+[File: `dup2.go`](./ch01/dup2/dup2.go).
+
+The output:  
+<img src='images/20250426052843.png' width='450'/>
+
+Things to note:
+- The function `os.Open` returns two values: a file pointer and an error value.
+- If `err` is not `nil`, something went wrong while opening the file.
+- The verb `%v` in `fmt.Printf` is used to print the value in a default format.
+- The call to `countLines` precedes its declaraion; functions and other package-level declarations can be in any order.
+- A `map` is a reference to a data structure created by the `make` function.
+- When a `map` is passed to a function, the function receives a copy of the reference to the map, not a copy of the map itself.
+- Any changes made to the map in the function are reflected in the original map.
+
+
+The prior two versions of `dup` are not very efficient because input is read and broken into lines as needed. An alternative approach is to read the entire input into memory and then process it. This is done in the third version of `dup`.
+
+**`Dup` Version 3**: reads from files and counts duplicate lines, but reads the entire input into memory first.
+
+```go
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
+)
+
+func main() {
+	// Create a map to store line counts
+	counts := make(map[string]int)
+
+	// Process each file specified on the command line
+	for _, filename := range os.Args[1:] {
+		// Read entire file contents at once
+		data, err := ioutil.ReadFile(filename)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "dup3: %v\n", err)
+			continue
+		}
+
+		// Count occurrences of each line
+		for _, line := range strings.Split(string(data), "\n") {
+			counts[line]++
+		}
+
+		// Display lines that appear more than once
+		for line, n := range counts {
+			if n > 1 {
+				fmt.Printf("%d\t%s\n", n, line)
+			}
+		}
+	}
+}
+```
+[File: `dup3.go`](./ch01/dup3/dup3.go).
+
+Output:  
+<img src='images/20250426053007.png' width='450'/>
+
+Things to note:
+- `ReadFile` contains a byte slice that must be converted to a string before it can be split into lines.
+
+**Exercise 1.4**: Modify the `dup2` program to print the names of all files in which each duplicated line occurs.  
+[File: `dup4.go`](./ch01/ex1_4-dup4/dup4.go).
