@@ -175,3 +175,68 @@ package main
 This section covers three variants of a program called `dup`, partially inspired by the Unix command `uniq`, which looks for adjacent duplicate lines.
 
 **`Dup` Version 1**: prints each line that appears more than once in the input, preceeded by its count.
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+// Main function: Reads input, counts duplicate lines, and prints results.
+func main() {
+	// Create a map to store line counts
+	counts := make(map[string]int)
+
+	// Initialize a scanner to read from standard input
+	input := bufio.NewScanner(os.Stdin)
+
+	// Loop to read each line of input
+	for input.Scan() {
+		counts[input.Text()]++
+	}
+
+	// Iterate over the map to find duplicates and print results
+	for line, n := range counts {
+		if n > 1 {
+			fmt.Printf("%d\t%s\n", n, line)
+		}
+	}
+}
+```
+[File: `dup1.go`](./ch01/dup1/dup1.go).
+
+The output:  
+<img src='images/20250426044014.png' width='450'/>
+
+Things to note:
+- A `map` holds a set of key-value pairs and provides constant-time access to the store.
+- The key may be any type whose values  can be compared with `==`, strings being the most common.
+- In this example, the key is a string and the value is an `int`.
+- The build-in function creates a new empty map.
+- The statement `counts[input.Text()]++` is a shorthand for the following:
+```go
+line := input.Text()
+counts[line] = counts[line] + 1
+```
+- Each time `dup` reads a line of input, the line is used as a key in the map, and the value is incremented by 1.
+- The `bufio` package provides Scanner, which is the easiest way to process input that naturally consists of lines.
+- The `Scan` function returns `true` if there is another line to read, and `false` when the input is exhausted.
+- The following table summarizes the format verbs used in `fmt.Printf`:
+
+| Format     | Description                           |
+| ---------- | ------------------------------------- |
+| %d         | decimal integer                       |
+| %x, %o, %b | integer in hexadecimal, octal, binary |
+| %f         | floating-point number: 3.141593       |
+| %g, %e     | 3.141592653589793  3.141593e+00       |
+| %t         | boolean: true or false                |
+| %c         | rune (Unicode code point)             |
+| %s         | string                                |
+| %q         | quoted string "abc" or rune 'c'       |
+| %v         | any value in a natural format         |
+| %T         | type of any value                     |
+| %%         | literal percent sign (no operand)     |
+- `printf` does not add a newline at the end of the output, so you need to add it manually with `\n`.
