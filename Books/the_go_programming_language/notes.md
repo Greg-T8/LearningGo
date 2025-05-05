@@ -426,3 +426,39 @@ Things to note:
 
 **Output:**  
 ![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_ext1_6/out.gif)
+
+### 1.5 Fetching a URL
+
+```go
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+)
+
+func main() {
+	for _, url := range os.Args[1:] {
+		// Make HTTP GET request to the URL and store result in resp struct
+		resp, err := http.Get(url)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+			os.Exit(1)
+		}
+		// Read the response and store it in b
+		b, err := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
+			os.Exit(1)
+		}
+		fmt.Printf("%s", b)
+	}
+}
+```
+[File: `fetch.go`](./ch01/urls/fetch_1/fetch.go).
+
+**Output:**  
+<img src='images/20250505042912.png' width='550'/>
