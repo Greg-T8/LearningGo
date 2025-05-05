@@ -360,4 +360,72 @@ This next program demonstrates the use of Go's standard image packages to create
 
 New constructs introduced in this program include: const declarations, struct types, composite literals.
 
+```go
+package main
 
+import (
+	"image"
+	"image/color"
+	"image/gif"
+	"io"
+	"math"
+	"math/rand"
+	"os"
+)
+
+// This block defines the color palette and constants for color indices
+var palette = []color.Color{color.White, color.Black} 	// Composite literal for color.Color slice
+
+const (
+	whiteIndex = 0
+	blackIndex = 1
+)
+
+func main() {
+	lissajous(os.Stdout)
+}
+
+func lissajous(out io.Writer) {
+	const (
+		cycles  = 5     // number of complete x oscillator revolutions
+		res     = 0.001 // angular resolution
+		size    = 100   // image canvas covers [-size..+size]
+		nframes = 64    // number of frames in the animation
+		delay   = 8     // delay between frames in 10ms units
+	)
+
+	freq  := rand.Float64() * 3.0           // relative frequency of y oscillator
+	anim  := gif.GIF{LoopCount: nframes}	// composite literal for gif.GIF struct
+	phase := 0.0                            // phase difference
+	for i := 0; i < nframes; i++ {
+		rect := image.Rect(0, 0, 2 * size + 1, 2 * size + 1)
+		img := image.NewPaletted(rect, palette)
+		for t := 0.0; t < cycles * 2 * math.Pi;  t += res {
+			x := math.Sin(t)
+			y := math.Sin(t * freq + phase)
+			img.SetColorIndex(size + int(x * size + 0.5), size + int(y * size + 0.5), blackIndex)
+		}
+		phase += 0.1
+		anim.Delay = append(anim.Delay, delay)
+		anim.Image = append(anim.Image, img)
+	}
+	gif.EncodeAll(out, &anim)  // Note: using gif.EncodeAll instead of gif.Encode
+}
+```
+[File: `lissajous.go`](./ch01/animated_gifs/lissajous_1/lissajous.go).
+
+The output:  
+![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_1/out.gif).
+
+Things to note:
+- After importing a package whose path has multiple components, like `image/color`, you can refer to the package by its last component, like `color`, e.g. `color.White`.
+- A `const` declaration declareas values that are fixed at compile time. `const` declarations may be used at the package level or inside functions.
+- The expressions `[]color.Color{...}` and `gif.GIF{...}` are *composite literals*, a compact notation for instantiating any of Go's composite types, including structs, arrays, and slices.
+- The type `gif.GIF` is a struct type, which is a collection of fields, each with a name and type. 
+
+**Exercise 1.5**: Change the Lissajous program’s color palette to green on black, for added authenticity. To create the web color #RRGGBB, use color.RGBA{0xRR, 0xGG, 0xBB, 0xff}, where each pair of hexadecimal digits represents the intensity of the red, green, or blue component of the pixel.
+
+[File: `lissajous.go`](./ch01/animated_gifs/lissajous_ex1_5/lissajous.go).
+
+**Output:**  
+![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_ex1_5/out.gif).
