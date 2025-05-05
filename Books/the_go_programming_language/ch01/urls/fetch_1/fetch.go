@@ -4,7 +4,6 @@
 // Greg Tate
 // 2025-05-05
 
-// This block contains the package declaration and imports
 package main
 
 import (
@@ -14,7 +13,6 @@ import (
 	"os"
 )
 
-// This block contains the main function, which fetches and prints each URL's content
 func main() {
 	for _, url := range os.Args[1:] {
 		// Make HTTP GET request to the URL and store result in resp struct

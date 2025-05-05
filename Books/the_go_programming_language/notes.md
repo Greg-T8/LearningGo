@@ -95,7 +95,7 @@ The `os.Args` variable is a slice of strings containing the command-line argumen
   - `os.Args[0]` is the name of the command.
   - `os.Args[1:]` contains the arguments passed to the program.
 
-Example: Concatenating and printing command-line arguments (index-based loop):
+**Example:** Concatenating and printing command-line arguments (index-based loop):
 
     ```go
     package main
@@ -118,33 +118,33 @@ Example: Concatenating and printing command-line arguments (index-based loop):
   - `var` declares variables; uninitialized variables get the zero value (`""` for strings).
   - The `+` operator concatenates strings.
   - `:=` is the short variable declaration, inferring the type.
-  - `i++` is the only increment operator (no prefix form).
+  - `i++` is the only increment operator (there is no prefix form).
   - Parentheses are not used in the `for` statement.
   - Braces are required, and the opening brace must be on the same line as the `for`.
   - Any part of the `for` statement (init, condition, post) can be omitted.
 
-Example: Using a range-based for loop:
+**Example:** Using a range-based for loop:
 
-    ```go
-    package main
+```go
+package main
 
-    import (
-        "fmt"
-        "os"
-    )
+import (
+    "fmt"
+    "os"
+)
 
-    func main() {
-        s, sep := "", ""
-        for _, arg := range os.Args[1:] {
-            s += sep + arg
-            sep = " "
-        }
-        fmt.Println(s)
+func main() {
+    s, sep := "", ""
+    for _, arg := range os.Args[1:] {
+        s += sep + arg
+        sep = " "
     }
-    ```
+    fmt.Println(s)
+}
+```
 
-    - Each iteration of the `range` loop provides the index and value.
-    - The blank identifier `_` is used to ignore the index when not needed.
+  - Each iteration of the `range` loop provides the index and value.
+  - The blank identifier `_` is used to ignore the index when not needed.
 
 Variable declaration styles:
 
