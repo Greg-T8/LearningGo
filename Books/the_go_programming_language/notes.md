@@ -206,7 +206,7 @@ func main() {
 	}
 }
 ```
-[File: `dup1.go`](./ch01/dup1/dup1.go).
+[File: `dup1.go`](./ch01/duplicate_lines/dup1/dup1.go).
 
 The output:  
 <img src='images/20250426044014.png' width='450'/>
@@ -287,7 +287,7 @@ func countLines(f *os.File, counts map[string]int) {
 	// NOTE: ignoring potential errors from input.Err()
 }
 ```
-[File: `dup2.go`](./ch01/dup2/dup2.go).
+[File: `dup2.go`](./ch01/duplicate_lines/dup2/dup2.go).
 
 The output:  
 <img src='images/20250426052843.png' width='450'/>
@@ -343,7 +343,7 @@ func main() {
 	}
 }
 ```
-[File: `dup3.go`](./ch01/dup3/dup3.go).
+[File: `dup3.go`](./ch01/duplicate_lines/dup3/dup3.go).
 
 Output:  
 <img src='images/20250426053007.png' width='450'/>
@@ -352,4 +352,12 @@ Things to note:
 - `ReadFile` contains a byte slice that must be converted to a string before it can be split into lines.
 
 **Exercise 1.4**: Modify the `dup2` program to print the names of all files in which each duplicated line occurs.  
-[File: `dup4.go`](./ch01/ex1_4-dup4/dup4.go).
+[File: `dup4.go`](./ch01/duplicate_lines/ex1_4-dup4/dup4.go).
+
+### 1.4 Animated GIFs
+
+This next program demonstrates the use of Go's standard image packages to create *Lissajous figures*, which are parametric curves produced by harmonic oscillation in two dimensions.
+
+New constructs introduced in this program include: const declarations, struct types, composite literals.
+
+
