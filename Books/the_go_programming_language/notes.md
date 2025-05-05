@@ -15,7 +15,6 @@
 ```Go
 go run hello.go         // Run the program hello.go
 go build hello.go       // Build the program hello.go into an executable file
-
 ```
 
 
@@ -92,11 +91,11 @@ package main
 
 ### 1.2 Command-Line Arguments
 
-- The `os.Args` variable is a slice of strings containing the command-line arguments.
-    - `os.Args[0]` is the name of the command.
-    - `os.Args[1:]` contains the arguments passed to the program.
+The `os.Args` variable is a slice of strings containing the command-line arguments.
+  - `os.Args[0]` is the name of the command.
+  - `os.Args[1:]` contains the arguments passed to the program.
 
-- Example: Concatenating and printing command-line arguments (index-based loop):
+Example: Concatenating and printing command-line arguments (index-based loop):
 
     ```go
     package main
@@ -116,15 +115,15 @@ package main
     }
     ```
 
-    - `var` declares variables; uninitialized variables get the zero value (`""` for strings).
-    - The `+` operator concatenates strings.
-    - `:=` is the short variable declaration, inferring the type.
-    - `i++` is the only increment operator (no prefix form).
-    - Parentheses are not used in the `for` statement.
-    - Braces are required, and the opening brace must be on the same line as the `for`.
-    - Any part of the `for` statement (init, condition, post) can be omitted.
+  - `var` declares variables; uninitialized variables get the zero value (`""` for strings).
+  - The `+` operator concatenates strings.
+  - `:=` is the short variable declaration, inferring the type.
+  - `i++` is the only increment operator (no prefix form).
+  - Parentheses are not used in the `for` statement.
+  - Braces are required, and the opening brace must be on the same line as the `for`.
+  - Any part of the `for` statement (init, condition, post) can be omitted.
 
-- Example: Using a range-based for loop:
+Example: Using a range-based for loop:
 
     ```go
     package main
@@ -147,18 +146,18 @@ package main
     - Each iteration of the `range` loop provides the index and value.
     - The blank identifier `_` is used to ignore the index when not needed.
 
-- Variable declaration styles:
+Variable declaration styles:
 
-    ```go
-    s := ""             // short variable declaration
-    var s string        // var declaration
-    var s = ""          // var declaration with initialization
-    var s string = ""   // var declaration with type and initialization
-    ```
+ ```go
+ s := ""             // short variable declaration
+ var s string        // var declaration
+ var s = ""          // var declaration with initialization
+ var s string = ""   // var declaration with type and initialization
+ ```
 
-    - `:=` can only be used inside functions.
-    - The second form uses the zero value for initialization.
-    - The third and fourth forms are more explicit but less common in practice.
+  - `:=` can only be used inside functions.
+  - The second form uses the zero value for initialization.
+  - The third and fourth forms are more explicit but less common in practice.
 
 ### 1.3 Funding Duplicate Lines
 
@@ -198,7 +197,7 @@ func main() {
 ```
 [File: `dup1.go`](./ch01/duplicate_lines/dup1/dup1.go).
 
-The output:  
+**Output:**  
 <img src='images/20250426044014.png' width='450'/>
 
 Things to note:
@@ -279,7 +278,7 @@ func countLines(f *os.File, counts map[string]int) {
 ```
 [File: `dup2.go`](./ch01/duplicate_lines/dup2/dup2.go).
 
-The output:  
+**Output:**  
 <img src='images/20250426052843.png' width='450'/>
 
 Things to note:
@@ -335,7 +334,7 @@ func main() {
 ```
 [File: `dup3.go`](./ch01/duplicate_lines/dup3/dup3.go).
 
-Output:  
+**Output:**  
 <img src='images/20250426053007.png' width='450'/>
 
 Things to note:
