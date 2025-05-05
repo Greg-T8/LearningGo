@@ -97,31 +97,31 @@ The `os.Args` variable is a slice of strings containing the command-line argumen
 
 **Example:** Concatenating and printing command-line arguments (index-based loop):
 
-    ```go
-    package main
+```go
+package main
 
-    import (
-        "fmt"
-        "os"
-    )
+import (
+    "fmt"
+    "os"
+)
 
-    func main() {
-        var s, sep string
-        for i := 1; i < len(os.Args); i++ {
-            s += sep + os.Args[i]
-            sep = " "
-        }
-        fmt.Println(s)
+func main() {
+    var s, sep string
+    for i := 1; i < len(os.Args); i++ {
+        s += sep + os.Args[i]
+        sep = " "
     }
-    ```
+    fmt.Println(s)
+}
+```
 
-  - `var` declares variables; uninitialized variables get the zero value (`""` for strings).
-  - The `+` operator concatenates strings.
-  - `:=` is the short variable declaration, inferring the type.
-  - `i++` is the only increment operator (there is no prefix form).
-  - Parentheses are not used in the `for` statement.
-  - Braces are required, and the opening brace must be on the same line as the `for`.
-  - Any part of the `for` statement (init, condition, post) can be omitted.
+- `var` declares variables; uninitialized variables get the zero value (`""` for strings).
+- The `+` operator concatenates strings.
+- `:=` is the short variable declaration, inferring the type.
+- `i++` is the only increment operator (there is no prefix form).
+- Parentheses are not used in the `for` statement.
+- Braces are required, and the opening brace must be on the same line as the `for`.
+- Any part of the `for` statement (init, condition, post) can be omitted.
 
 **Example:** Using a range-based for loop:
 
@@ -403,7 +403,7 @@ func lissajous(out io.Writer) {
 ```
 [File: `lissajous.go`](./ch01/animated_gifs/lissajous_1/lissajous.go).
 
-The output:  
+**Output:**  
 ![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_1/out.gif).
 
 Things to note:
