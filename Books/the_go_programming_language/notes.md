@@ -21,9 +21,6 @@ go build hello.go       // Build the program hello.go into an executable file
 
 ## Overview and History of Go
 
-<details>
-<summary>Overview and History of Go</summary>
-
 - **Conception**: Go was conceived in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson at Google and was publicly announced in 2009.
 
 - **Influencers of Go**:
@@ -67,8 +64,6 @@ go build hello.go       // Build the program hello.go into an executable file
     - No function annotations.
     - No thread-local storage.
 
-</details>
-
 ## 1. Tutorial
 
 The following program can be compiled and ran with `go run hello.go`:
@@ -96,9 +91,6 @@ package main
 - Go does not require semicolons; they are automatically inserted at the end of lines.
 
 ### 1.2 Command-Line Arguments
-
-<details>
-<summary>Expand</summary>
 
 - The `os.Args` variable is a slice of strings containing the command-line arguments.
     - `os.Args[0]` is the name of the command.
@@ -167,8 +159,6 @@ package main
     - `:=` can only be used inside functions.
     - The second form uses the zero value for initialization.
     - The third and fourth forms are more explicit but less common in practice.
-
-</details>
 
 ### 1.3 Funding Duplicate Lines
 
@@ -428,4 +418,11 @@ Things to note:
 [File: `lissajous.go`](./ch01/animated_gifs/lissajous_ex1_5/lissajous.go).
 
 **Output:**  
-![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_ex1_5/out.gif).
+![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_ex1_5/out.gif)
+
+**Exercise 1.6**: Modify the Lissajous program to produce images in multiple colors by adding more values to palette and then displaying them by changing the third argument of SetColorIndex in some interesting way.
+
+[File: `lissajous.go`](./ch01/animated_gifs/lissajous_ext1_6/lissajous.go).
+
+**Output:**  
+![File: `lissajous.gif`](./ch01/animated_gifs/lissajous_ext1_6/out.gif)
