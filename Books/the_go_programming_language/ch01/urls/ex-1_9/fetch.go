@@ -1,8 +1,9 @@
 // Program: Fetch URL Content and Display HTTP Status
 // Context: The Go Programming Language, Chapter 1, Exercise 1.9
 // Author: Greg Tate
-// Date: 2024-06-09
-// Location: Austin, TX
+// Date: 2024-05-14
+
+// Objective: Modify fetch to also print the HTTP status code, found in resp.Status
 
 package main
 

@@ -4,6 +4,11 @@
 // Greg Tate
 // 2025-05-14
 
+// Objective: The function call `io.copy(dst, src)` reads from src and writes to
+// dst. use it instead of `ioutil.readall` to copy the response body to
+// os.stdout without requiring a buffer large enough to hold the entire stream.
+// be sure to check the error result of io.copy.
+
 package main
 
 import (
