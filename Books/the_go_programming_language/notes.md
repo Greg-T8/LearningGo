@@ -10,19 +10,30 @@
 
 </details>
 
+<!-- omit in toc -->
 ## Go Commands 
 
 ```Go
 go run hello.go         // Run the program hello.go
 go build hello.go       // Build the program hello.go into an executable file
 ```
+<!-- omit in toc -->
+## Contents
+
+- [Overview and History of Go](#overview-and-history-of-go)
+  - [The Go Project](#the-go-project)
+- [1. Tutorial](#1-tutorial)
+  - [1.2 Command-Line Arguments](#12-command-line-arguments)
+  - [1.3 Funding Duplicate Lines](#13-funding-duplicate-lines)
+  - [1.4 Animated GIFs](#14-animated-gifs)
+  - [1.5 Fetching a URL](#15-fetching-a-url)
 
 
 ## Overview and History of Go
 
-- **Conception**: Go was conceived in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson at Google and was publicly announced in 2009.
+**Conception**: Go was conceived in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson at Google and was publicly announced in 2009.
 
-- **Influencers of Go**:
+**Influencers of Go**:
   
   <img src='images/20250419140256.png' width='400'/>
 
@@ -462,4 +473,34 @@ func main() {
 **Output:**  
 <img src='images/20250505042912.png' width='550'/>
 
-**Exercise 1.7**: The function call io.Copy(dst, src) reads from src and writes to dst. Use it instead of ioutil.ReadAll to copy the response body to os.Stdout without requiring a buffer large enough to hold the entire stream. Be sure to check the error result of io.Copy.
+**Exercise 1.7**: The function call `io.copy(dst, src)` reads from src and writes to dst. use it instead of `ioutil.readall` to copy the response body to os.stdout without requiring a buffer large enough to hold the entire stream. be sure to check the error result of io.copy.
+
+```go
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+)
+
+func main() {
+	for _, url := range os.Args[1:] {
+		// Make HTTP GET request to the URL and store result in resp struct
+		resp, err := http.Get(url)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+			os.Exit(1)
+		}
+		// Read the response and write it to stdout using io.Copy
+		io.Copy(os.Stdout, resp.Body)
+		resp.Body.Close()
+	}
+}
+```
+[fetch.go](./ch01/urls/ex-1_7/fetch.go)
+
+**Output:**  
+<img src='images/20250505042912.png' width='550'/>
+
