@@ -180,30 +180,30 @@ This section covers three variants of a program called `dup`, partially inspired
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+    "bufio"
+    "fmt"
+    "os"
 )
 
 // Main function: Reads input, counts duplicate lines, and prints results.
 func main() {
-	// Create a map to store line counts
-	counts := make(map[string]int)
+    // Create a map to store line counts
+    counts := make(map[string]int)
 
-	// Initialize a scanner to read from standard input
-	input := bufio.NewScanner(os.Stdin)
+    // Initialize a scanner to read from standard input
+    input := bufio.NewScanner(os.Stdin)
 
-	// Loop to read each line of input
-	for input.Scan() {
-		counts[input.Text()]++
-	}
+    // Loop to read each line of input
+    for input.Scan() {
+        counts[input.Text()]++
+    }
 
-	// Iterate over the map to find duplicates and print results
-	for line, n := range counts {
-		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
-		}
-	}
+    // Iterate over the map to find duplicates and print results
+    for line, n := range counts {
+        if n > 1 {
+            fmt.Printf("%d\t%s\n", n, line)
+        }
+    }
 }
 ```
 [File: `dup1.go`](./ch01/duplicate_lines/dup1/dup1.go).
@@ -248,43 +248,43 @@ counts[line] = counts[line] + 1
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+    "bufio"
+    "fmt"
+    "os"
 )
 
 // main creates a map to track line counts, processes input from stdin or files,
 // and then displays any lines that appear more than once
 func main() {
-	counts := make(map[string]int)
-	files := os.Args[1:]
-	if len(files) == 0 {
-		countLines(os.Stdin, counts)
-	} else {
-		for _, arg := range files {
-			f, err := os.Open(arg)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
-				continue
-			}
-			countLines(f, counts)
-			f.Close()
-		}
-	}
-	for line, n := range counts {
-		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
-		}
-	}
+    counts := make(map[string]int)
+    files := os.Args[1:]
+    if len(files) == 0 {
+        countLines(os.Stdin, counts)
+    } else {
+        for _, arg := range files {
+            f, err := os.Open(arg)
+            if err != nil {
+                fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
+                continue
+            }
+            countLines(f, counts)
+            f.Close()
+        }
+    }
+    for line, n := range counts {
+        if n > 1 {
+            fmt.Printf("%d\t%s\n", n, line)
+        }
+    }
 }
 
 // countLines reads input lines from a file and counts occurrences in the map
 func countLines(f *os.File, counts map[string]int) {
-	input := bufio.NewScanner(f)
-	for input.Scan() {
-		counts[input.Text()]++
-	}
-	// NOTE: ignoring potential errors from input.Err()
+    input := bufio.NewScanner(f)
+    for input.Scan() {
+        counts[input.Text()]++
+    }
+    // NOTE: ignoring potential errors from input.Err()
 }
 ```
 [File: `dup2.go`](./ch01/duplicate_lines/dup2/dup2.go).
@@ -310,37 +310,37 @@ The prior two versions of `dup` are not very efficient because input is read and
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"strings"
+    "fmt"
+    "io/ioutil"
+    "os"
+    "strings"
 )
 
 func main() {
-	// Create a map to store line counts
-	counts := make(map[string]int)
+    // Create a map to store line counts
+    counts := make(map[string]int)
 
-	// Process each file specified on the command line
-	for _, filename := range os.Args[1:] {
-		// Read entire file contents at once
-		data, err := ioutil.ReadFile(filename)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "dup3: %v\n", err)
-			continue
-		}
+    // Process each file specified on the command line
+    for _, filename := range os.Args[1:] {
+        // Read entire file contents at once
+        data, err := ioutil.ReadFile(filename)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "dup3: %v\n", err)
+            continue
+        }
 
-		// Count occurrences of each line
-		for _, line := range strings.Split(string(data), "\n") {
-			counts[line]++
-		}
+        // Count occurrences of each line
+        for _, line := range strings.Split(string(data), "\n") {
+            counts[line]++
+        }
 
-		// Display lines that appear more than once
-		for line, n := range counts {
-			if n > 1 {
-				fmt.Printf("%d\t%s\n", n, line)
-			}
-		}
-	}
+        // Display lines that appear more than once
+        for line, n := range counts {
+            if n > 1 {
+                fmt.Printf("%d\t%s\n", n, line)
+            }
+        }
+    }
 }
 ```
 [File: `dup3.go`](./ch01/duplicate_lines/dup3/dup3.go).
@@ -364,52 +364,52 @@ New constructs introduced in this program include: const declarations, struct ty
 package main
 
 import (
-	"image"
-	"image/color"
-	"image/gif"
-	"io"
-	"math"
-	"math/rand"
-	"os"
+    "image"
+    "image/color"
+    "image/gif"
+    "io"
+    "math"
+    "math/rand"
+    "os"
 )
 
 // This block defines the color palette and constants for color indices
-var palette = []color.Color{color.White, color.Black} 	// Composite literal for color.Color slice
+var palette = []color.Color{color.White, color.Black}   // Composite literal for color.Color slice
 
 const (
-	whiteIndex = 0
-	blackIndex = 1
+    whiteIndex = 0
+    blackIndex = 1
 )
 
 func main() {
-	lissajous(os.Stdout)
+    lissajous(os.Stdout)
 }
 
 func lissajous(out io.Writer) {
-	const (
-		cycles  = 5     // number of complete x oscillator revolutions
-		res     = 0.001 // angular resolution
-		size    = 100   // image canvas covers [-size..+size]
-		nframes = 64    // number of frames in the animation
-		delay   = 8     // delay between frames in 10ms units
-	)
+    const (
+        cycles  = 5     // number of complete x oscillator revolutions
+        res     = 0.001 // angular resolution
+        size    = 100   // image canvas covers [-size..+size]
+        nframes = 64    // number of frames in the animation
+        delay   = 8     // delay between frames in 10ms units
+    )
 
-	freq  := rand.Float64() * 3.0           // relative frequency of y oscillator
-	anim  := gif.GIF{LoopCount: nframes}	// composite literal for gif.GIF struct
-	phase := 0.0                            // phase difference
-	for i := 0; i < nframes; i++ {
-		rect := image.Rect(0, 0, 2 * size + 1, 2 * size + 1)
-		img := image.NewPaletted(rect, palette)
-		for t := 0.0; t < cycles * 2 * math.Pi;  t += res {
-			x := math.Sin(t)
-			y := math.Sin(t * freq + phase)
-			img.SetColorIndex(size + int(x * size + 0.5), size + int(y * size + 0.5), blackIndex)
-		}
-		phase += 0.1
-		anim.Delay = append(anim.Delay, delay)
-		anim.Image = append(anim.Image, img)
-	}
-	gif.EncodeAll(out, &anim)  // Note: using gif.EncodeAll instead of gif.Encode
+    freq  := rand.Float64() * 3.0           // relative frequency of y oscillator
+    anim  := gif.GIF{LoopCount: nframes}    // composite literal for gif.GIF struct
+    phase := 0.0                            // phase difference
+    for i := 0; i < nframes; i++ {
+        rect := image.Rect(0, 0, 2 * size + 1, 2 * size + 1)
+        img := image.NewPaletted(rect, palette)
+        for t := 0.0; t < cycles * 2 * math.Pi;  t += res {
+            x := math.Sin(t)
+            y := math.Sin(t * freq + phase)
+            img.SetColorIndex(size + int(x * size + 0.5), size + int(y * size + 0.5), blackIndex)
+        }
+        phase += 0.1
+        anim.Delay = append(anim.Delay, delay)
+        anim.Image = append(anim.Image, img)
+    }
+    gif.EncodeAll(out, &anim)  // Note: using gif.EncodeAll instead of gif.Encode
 }
 ```
 [File: `lissajous.go`](./ch01/animated_gifs/lissajous_1/lissajous.go).
@@ -443,29 +443,29 @@ Things to note:
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "os"
 )
 
 func main() {
-	for _, url := range os.Args[1:] {
-		// Make HTTP GET request to the URL and store result in resp struct
-		resp, err := http.Get(url)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
-			os.Exit(1)
-		}
-		// Read the response and store it in b
-		b, err := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
-			os.Exit(1)
-		}
-		fmt.Printf("%s", b)
-	}
+    for _, url := range os.Args[1:] {
+        // Make HTTP GET request to the URL and store result in resp struct
+        resp, err := http.Get(url)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+            os.Exit(1)
+        }
+        // Read the response and store it in b
+        b, err := ioutil.ReadAll(resp.Body)
+        resp.Body.Close()
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
+            os.Exit(1)
+        }
+        fmt.Printf("%s", b)
+    }
 }
 ```
 [File: `fetch.go`](./ch01/urls/fetch_1/fetch.go).
@@ -479,24 +479,24 @@ func main() {
 package main
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-	"os"
+    "fmt"
+    "io"
+    "net/http"
+    "os"
 )
 
 func main() {
-	for _, url := range os.Args[1:] {
-		// Make HTTP GET request to the URL and store result in resp struct
-		resp, err := http.Get(url)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
-			os.Exit(1)
-		}
-		// Read the response and write it to stdout using io.Copy
-		io.Copy(os.Stdout, resp.Body)
-		resp.Body.Close()
-	}
+    for _, url := range os.Args[1:] {
+        // Make HTTP GET request to the URL and store result in resp struct
+        resp, err := http.Get(url)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+            os.Exit(1)
+        }
+        // Read the response and write it to stdout using io.Copy
+        io.Copy(os.Stdout, resp.Body)
+        resp.Body.Close()
+    }
 }
 ```
 [fetch.go](./ch01/urls/ex-1_7/fetch.go)
@@ -510,30 +510,30 @@ func main() {
 package main
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-	"os"
-	"strings"
+    "fmt"
+    "io"
+    "net/http"
+    "os"
+    "strings"
 )
 
 func main() {
-	// Loop through each URL provided as a command-line argument
-	for _, url := range os.Args[1:] {
-		// Prepend "https://" to the URL if it does not already have it
-		if !strings.HasPrefix(url, "https://") {
-			url = "https://" + url
-		}
-		// Send an HTTP GET request to the URL and handle errors
-		resp, err := http.Get(url)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
-			os.Exit(1)
-		}
-		// Copy the response body to standard output
-		io.Copy(os.Stdout, resp.Body)
-		resp.Body.Close()
-	}
+    // Loop through each URL provided as a command-line argument
+    for _, url := range os.Args[1:] {
+        // Prepend "https://" to the URL if it does not already have it
+        if !strings.HasPrefix(url, "https://") {
+            url = "https://" + url
+        }
+        // Send an HTTP GET request to the URL and handle errors
+        resp, err := http.Get(url)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+            os.Exit(1)
+        }
+        // Copy the response body to standard output
+        io.Copy(os.Stdout, resp.Body)
+        resp.Body.Close()
+    }
 }
 ```
 [fetch.go](./ch01/urls/ex-1_8/fetch.go)
@@ -544,31 +544,31 @@ func main() {
 package main
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-	"os"
-	"strings"
+    "fmt"
+    "io"
+    "net/http"
+    "os"
+    "strings"
 )
 
 func main() {
-	// Loop through each URL provided as a command-line argument
-	for _, url := range os.Args[1:] {
-		// Prepend "https://" to the URL if it does not already have it
-		if !strings.HasPrefix(url, "https://") {
-			url = "https://" + url
-		}
-		// Send an HTTP GET request to the URL and handle errors
-		resp, err := http.Get(url)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
-			os.Exit(1)
-		}
-		// Print the HTTP response status code and copy the response body to standard output
-		fmt.Printf("Response status code: %d\n", resp.StatusCode)
-		io.Copy(os.Stdout, resp.Body)
-		resp.Body.Close()
-	}
+    // Loop through each URL provided as a command-line argument
+    for _, url := range os.Args[1:] {
+        // Prepend "https://" to the URL if it does not already have it
+        if !strings.HasPrefix(url, "https://") {
+            url = "https://" + url
+        }
+        // Send an HTTP GET request to the URL and handle errors
+        resp, err := http.Get(url)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+            os.Exit(1)
+        }
+        // Print the HTTP response status code and copy the response body to standard output
+        fmt.Printf("Response status code: %d\n", resp.StatusCode)
+        io.Copy(os.Stdout, resp.Body)
+        resp.Body.Close()
+    }
 }
 ```
 [fetch.go](./ch01/urls/ex-1_9/fetch.go)
