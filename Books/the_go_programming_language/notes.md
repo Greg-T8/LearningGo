@@ -27,6 +27,7 @@ go build hello.go       // Build the program hello.go into an executable file
   - [1.3 Funding Duplicate Lines](#13-funding-duplicate-lines)
   - [1.4 Animated GIFs](#14-animated-gifs)
   - [1.5 Fetching a URL](#15-fetching-a-url)
+  - [1.6 Fetching URLs Concurrently](#16-fetching-urls-concurrently)
 
 
 ## Overview and History of Go
@@ -572,3 +573,65 @@ func main() {
 }
 ```
 [fetch.go](./ch01/urls/ex-1_9/fetch.go)
+
+### 1.6 Fetching URLs Concurrently
+
+Go's concurrency model is one of its more interesting features, allowing you to run multiple tasks simultaneously using goroutines and channels.
+
+The next program, 'fetchall', fetches many URLs concurrently, so that the process will take no longer than the longest fetch rather than the sum of all fetch times. This version discards the responses but reports the size and elapsed time for each one:
+
+```go
+package main
+
+import (
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"time"
+)
+
+// Runs concurrent fetches for each URL provided as a command-line argument and prints the results.
+func main() {
+	start := time.Now()
+	ch    := make(chan string)
+	for _, url := range os.Args[1:] {
+		go fetch(url, ch)           // start a goroutine
+	}
+	for range os.Args[1:] {
+		fmt.Println(<-ch)           // receive from channel ch
+	}
+	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
+}
+
+// Fetches the content of a URL and sends the result or error to the provided channel.
+func fetch(url string, ch chan <- string) {
+	start := time.Now()
+	resp, err := http.Get(url)
+	if err != nil {
+		ch <- fmt.Sprint(err)       // send to channel ch
+		return
+	}
+	nbytes, err := io.Copy(ioutil.Discard, resp.Body)
+	resp.Body.Close()               // don't leak resources
+	if err != nil {
+		ch <- fmt.Sprintf("while reading %s: %v", url, err)
+		return
+	}
+	secs := time.Since(start).Seconds()
+	ch <- fmt.Sprintf("%.2fs %7d %s", secs, nbytes, url)
+}
+```
+[fetchall.go](./ch01/concurrency/fetchall_1/fetchall.go)
+
+**Output:**
+
+```cmd
+go build .\fetchall.go
+.\fetchall.exe https://golang.org https://gopl.io https://godoc.org
+0.19s   62937 https://golang.org
+0.23s   33482 https://godoc.org
+0.26s    4154 https://gopl.io
+0.26s elapsed
+```
