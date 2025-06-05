@@ -79,7 +79,7 @@ go build hello.go       // Build the program hello.go into an executable file
 
 The following program can be compiled and ran with `go run hello.go`:
 
-```
+```go
 package main
 
 import "fmt"
@@ -635,3 +635,34 @@ go build .\fetchall.go
 0.26s    4154 https://gopl.io
 0.26s elapsed
 ```
+Things to note:
+- A *goroutine* is a concurrent function execution.
+- A *channel* is a communication mechanism that allows one goroutine to pass values of a specified type to another goroutine.
+- The function `main` runs in a goroutine and the `go` statement creates additional goroutines.
+
+**Exercise 1.10:** Find a web site that produces a large amount of data. Investigate caching by running fetchall twice in succession to see whether the reported time changes much. Do you get the same content each time? Modify fetchall to print its output to a file so it can be examined.
+
+```go
+	output := fmt.Sprintf("%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Print(output)
+
+	// Write the output to a file
+	ioutil.WriteFile("fetch_output.txt", []byte(output), 0644)
+```
+[fetchall.go](./ch01/concurrency/ex1-10/fetchall.go)
+
+**Output:** Note how the reported time hasn't changed, and the overall time is the same for both runs, indicating asynchronous fetching.
+```cmd
+.\fetchall.exe https://download.thinkbroadband.com/512MB.zip https://download.thinkbroadband.com/512MB.zip
+0.62s     391 https://download.thinkbroadband.com/512MB.zip
+0.62s     391 https://download.thinkbroadband.com/512MB.zip
+0.62s elapsed
+```
+
+**Exercise 1.11:** Try fetchall with longer argument lists, such as samples from the top million web sites available at alexa.com. How does the program behave if a web site just doesn’t respond? (Section 8.9 describes mechanisms for coping in such cases.)
+
+Using `fetchall` with longer argument lists results in a slight increase in the total elapsed time.
+
+<img src="images/1749115257781.png" alt="fetchall performance graph" width="600">
+
+

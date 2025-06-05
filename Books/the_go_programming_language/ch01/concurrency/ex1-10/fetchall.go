@@ -3,7 +3,6 @@
 // the reported time changes much. Do you get the same content each time? Modify
 // fetchall to print its output to a file so it can be examined.
 
-
 package main
 
 import (
@@ -25,7 +24,12 @@ func main() {
 	for range os.Args[1:] {
 		fmt.Println(<-ch) // receive from channel ch
 	}
-	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
+	output := fmt.Sprintf("%.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Print(output)
+
+	// Write the output to a file
+	ioutil.WriteFile("fetch_output.txt", []byte(output), 0644)
+
 }
 
 // Fetches the content of a URL and sends the result or error to the provided channel.
