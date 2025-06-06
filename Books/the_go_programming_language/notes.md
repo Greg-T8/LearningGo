@@ -28,6 +28,7 @@ go build hello.go       // Build the program hello.go into an executable file
   - [1.4 Animated GIFs](#14-animated-gifs)
   - [1.5 Fetching a URL](#15-fetching-a-url)
   - [1.6 Fetching URLs Concurrently](#16-fetching-urls-concurrently)
+  - [1.7 A Web Server](#17-a-web-server)
 
 
 ## Overview and History of Go
@@ -665,4 +666,7 @@ Using `fetchall` with longer argument lists results in a slight increase in the 
 
 <img src="images/1749115257781.png" alt="fetchall performance graph" width="600">
 
+### 1.7 A Web Server
+
+Go's libraries make it easy to create a simple web server that respond to queries like those made by `fetch`. The following code is for a minimal server that returns the path component of the URL used to access the server.
 
