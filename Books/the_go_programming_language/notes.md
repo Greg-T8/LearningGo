@@ -670,3 +670,27 @@ Using `fetchall` with longer argument lists results in a slight increase in the 
 
 Go's libraries make it easy to create a simple web server that respond to queries like those made by `fetch`. The following code is for a minimal server that returns the path component of the URL used to access the server.
 
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", handler) 	//each request calls handler
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))   // listens on port 8000
+}
+
+// handler echoes the Path component of the requested URL
+func handler( w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)       // r is a struct representing the HTTP request with fields like URL, Method, Header, etc.
+}
+```
+**Note:** Windows Defender may block the server from running, and you may need to add an exception this to work.
+
+**Output:**
+
+<img src="images/1749200946580.png" alt="Server Output" width="500">
