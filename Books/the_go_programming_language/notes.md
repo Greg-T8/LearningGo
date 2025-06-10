@@ -738,6 +738,35 @@ func counter( w http.ResponseWriter, r *http.Request) {
 This third version is a richer example with a handler that reports on the headers and form data of the request, making it useful for debugging.
 
 ```go
+package main
 
+import (
+"fmt"
+	"log"
+	"net/http"
+	"sync"
+)
 
+var mu sync.Mutex
+var count int
+
+func main() {
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+// handler echoes the HTTP Request
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "%s %s\n", r.Method, r.URL, r.Proto)
+	for k, v := range r.Header {
+		fmt.Fprintf(w, "Header[%q] = %q\n", k, v)
+	}
+	fmt.Fprintf(w, "Host = %q\n", r.Host)
+	fmt.Fprintf(w, "RemoteAddr = %q\n", r.RemoteAddr)
+	if err := r.ParseForm(); err != nil {
+		log.Print(err)
+	}
+	for k, v := range r.Form {
+		fmt.Fprintf(w, "Form[%q] = %q\n", k, v)
 ```
+<img src="images/1749545054696.png" alt="Server Output" width="750" />
