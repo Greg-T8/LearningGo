@@ -695,7 +695,7 @@ func handler( w http.ResponseWriter, r *http.Request) {
 
 <img src="images/1749200946580.png" alt="Server Output" width="500">
 
-The following example adds a feature for returning the status:
+The following example adds a feature for returning the count of requests made to the server.
 
 ```go
 package main
@@ -712,7 +712,7 @@ var count int
 
 func main() {
 	http.HandleFunc("/", handler)
-	http.HandleFunc("/count", counter)
+	http.HandleFunc("/count", counter)                          // each request to /count calls counter
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
@@ -731,5 +731,13 @@ func counter( w http.ResponseWriter, r *http.Request) {
 	mu.Unlock()
 }
 ```
+**Note:** The mutex `mu` ensures the goroutines that handle the requests do not cause a race condition when accessing the shared variable `count`.
+
+<img src="images/1749544472096.png" alt="Server Output" width="300" />
+
+This third version is a richer example with a handler that reports on the headers and form data of the request, making it useful for debugging.
+
+```go
 
 
+```
