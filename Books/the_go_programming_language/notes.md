@@ -689,8 +689,16 @@ func handler( w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)       // r is a struct representing the HTTP request with fields like URL, Method, Header, etc.
 }
 ```
-**Note:** Windows Defender may block the server from running, and you may need to add an exception this to work.
+**Note:** Windows Defender may block the server from running, and you may need to add an exception this to work. See [Managing Windows Defender Exclusions](../../Notes/general.md#managing-windows-defender-exclusions).
 
 **Output:**
 
 <img src="images/1749200946580.png" alt="Server Output" width="500">
+
+The following example adds a feature for returning the status:
+
+```go
+
+
+
+```
