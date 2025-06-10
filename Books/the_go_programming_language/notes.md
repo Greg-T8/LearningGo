@@ -763,10 +763,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "Host = %q\n", r.Host)
 	fmt.Fprintf(w, "RemoteAddr = %q\n", r.RemoteAddr)
-	if err := r.ParseForm(); err != nil {
+	if err := r.ParseForm(); err != nil {						// Go allows a simple statement to preceed the `if` condition
 		log.Print(err)
 	}
 	for k, v := range r.Form {
 		fmt.Fprintf(w, "Form[%q] = %q\n", k, v)
 ```
 <img src="images/1749545217685.png" alt="Server Output" width="750" />
+
+
+To give an idea of combining interface mechanisms, the following example combines the web server with the lissajous figure generator, so that animated GIFs are written to the HTTP client instead of the standard output.
+
+```go
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		lissajous(w)
+	})
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+```
+[File: `server.go`](./ch01/web_server/server4/server.go)
+
+<img src="images/2025-06-10_04-23-37.gif" alt="Lissajous GIF" width="400" />
