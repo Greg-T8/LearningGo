@@ -785,3 +785,5 @@ func main() {
 [File: `server.go`](./ch01/web_server/server4/server.go)
 
 <img src="images/2025-06-10_04-23-37.gif" alt="Lissajous GIF" width="400" />
+
+**Exercise 1.12:** 
