@@ -769,4 +769,4 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	for k, v := range r.Form {
 		fmt.Fprintf(w, "Form[%q] = %q\n", k, v)
 ```
-<img src="images/1749545054696.png" alt="Server Output" width="750" />
+<img src="images/1749545217685.png" alt="Server Output" width="750" />
