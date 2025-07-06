@@ -789,3 +789,7 @@ func main() {
 <img src="images/2025-06-10_04-23-37.gif" alt="Lissajous GIF" width="400" />
 
 **Exercise 1.12:** Modify the Lissajous server to read parameter values from the URL. For example, you might arrange it so that a URL like http://localhost:8000/?cycles=20 sets the number of cycles to 20 instead of the default 5. Use the `strconv.Atoi` function to convert the string parameter into an integer. You can see its documentation with go doc strconv.Atoi.
+
+See [File: `server.go`](./ch01/web_server/ex_1.12/server.go).
+
+<img src="./ch01/web_server/ex_1.12/2025-07-06_04-31-33.gif" width="600" />
