@@ -33,6 +33,8 @@ go doc http.Get         // Show documentation for the http.Get function
   - [1.6 Fetching URLs Concurrently](#16-fetching-urls-concurrently)
   - [1.7 A Web Server](#17-a-web-server)
   - [1.8 Loose Ends](#18-loose-ends)
+- [2. Program Structure](#2-program-structure)
+  - [2.1 Names](#21-names)
 
 
 ## Overview and History of Go
@@ -876,4 +878,30 @@ func Get(url string) (resp *Response, err error)
 ...
 ```
 
-*
+**Comments**
+
+It is good style to write a comment before the declaration of each function to specify its behavior. Tools like `godoc` use these comments to generate documentation.
+
+Use `//` for single-line comments and `/* ... */` for multi-line comments. Comments that start with the name of the function are treated as documentation comments.
+
+## 2. Program Structure
+
+### 2.1 Names
+
+The names of Go functions, variables, constants, types, statement labels, and packages follow a simple rule: a name begins with a letter or an underscore and may have any number of letters, digits, or underscores after that. 
+
+Case matters: `heapSort` and `HeapSort` are different names.
+
+As of this book's writing in 2015, Go has 25 keywords:
+`break`, `case`, `chan`, `const`, `continue`, `default`, `defer`, `else`, `fallthrough`, `for`, `func`, `go`, `goto`, `if`, `import`, `interface`, `map`, `package`, `range`, `return`, `select`, `struct`, `switch`, `type`, and `var`.
+
+The [Go Language Specification](https://go.dev/ref/spec?utm_source=chatgpt.com#Keywords) continues to list exactly these keywords.
+
+In addition, there are about three dozen *predeclared* names like `int` and `true` for built-in constants, types, and functions:
+
+| Constants         | Types                                                                 | Functions                                 |
+|-------------------|-----------------------------------------------------------------------|-------------------------------------------|
+| `true`            | `int`   `int8`   `int16`   `int32`   `int64`                         | `make`   `len`   `cap`   `new`            |
+| `false`           | `uint`  `uint8`  `uint16`  `uint32`  `uint64`  `uintptr`             | `append` `copy`  `close`  `delete`        |
+| `iota`            | `float32` `float64` `complex128` `complex64`                         | `complex` `real` `imag`                   |
+| `nil`             | `bool`  `byte`  `rune`  `string`  `error`                            | `panic`   `recover`                       |
