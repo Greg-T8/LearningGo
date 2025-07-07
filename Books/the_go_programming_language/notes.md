@@ -18,6 +18,7 @@ go run hello.go         // Run the program hello.go
 go build hello.go       // Build the program hello.go into an executable file
 go clean -cache         // Clean the Go build cache
 go build -x -v hello.go // Build the program with verbose output
+go doc http.Get         // Show documentation for the http.Get function
 ```
 <!-- omit in toc -->
 ## Contents
@@ -31,6 +32,7 @@ go build -x -v hello.go // Build the program with verbose output
   - [1.5 Fetching a URL](#15-fetching-a-url)
   - [1.6 Fetching URLs Concurrently](#16-fetching-urls-concurrently)
   - [1.7 A Web Server](#17-a-web-server)
+  - [1.8 Loose Ends](#18-loose-ends)
 
 
 ## Overview and History of Go
@@ -793,3 +795,84 @@ func main() {
 See [File: `server.go`](./ch01/web_server/ex_1.12/server.go).
 
 <img src="./ch01/web_server/ex_1.12/2025-07-06_04-31-33.gif" width="600" />
+
+### 1.8 Loose Ends
+
+Other topics in Go...
+
+**Switch Statements**
+
+```go
+	switch coinflip() {
+	case "heads":
+		heads++
+	case "tails":
+		tails++
+	default:
+		fmt.Println("landed on edge!")
+```
+
+**Note:** The optional default case matches if none of the other cases match. Cases do not fall through from one to the next as in C-like languages (though there is a rarely used `fallthrough` statement that can be used to override this behavior).
+
+A switch statement does not need an operand; it can just list the cases, each of which is a boolean expression:
+
+```go
+func Signum(x int) int {
+	switch {
+		case x > 0:
+			return + 1
+		default:
+			return 0
+		case x < 0:
+			return -1
+	}
+}
+```
+
+This is called a *tagless switch*; it's equivalent to `switch true { ... }` .
+
+**Named Types**
+
+A declaration makes it possible to give a name to an existing type. Since struct types are often long, they are nearly always named.
+
+```py
+type Point struct {
+    X, Y int
+}
+```
+
+**Pointers**
+
+In C, pointers are relatively unconstrained. In other languages, pointers are disguised as "references", and there's not much that can be done with them except pass them around.
+
+Go takes a position somewhere in the middle: pointers are explicitly visible. The `&` operator yields the address of a variable, and the `*` operator retrieves the variable that the pointer refers to, but there is no pointer arithmetic.
+
+**Methods and Interfaces**
+
+A method is a function associated with a named type. Go is unusual in that methods may be attached to almost any named type.
+
+Interfaces are abstract types that let us treat concrete types in the same way based on what methods they have, not how they are represented or implemented.
+
+**Packages**
+
+Go comes with an extensive library of packages. See https://pkg.go.dev/std for the standard library documentation.
+
+You can access the documentation from the command line with `go doc`:
+
+```powershell
+go doc http.get
+package http // import "net/http"
+
+func Get(url string) (resp *Response, err error)
+    Get issues a GET to the specified URL. If the response is one of the
+    following redirect codes, Get follows the redirect, up to a maximum of 10
+    redirects:
+
+        301 (Moved Permanently)
+        302 (Found)
+        303 (See Other)
+        307 (Temporary Redirect)
+        308 (Permanent Redirect)
+...
+```
+
