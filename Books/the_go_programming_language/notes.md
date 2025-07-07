@@ -892,16 +892,28 @@ The names of Go functions, variables, constants, types, statement labels, and pa
 
 Case matters: `heapSort` and `HeapSort` are different names.
 
-As of this book's writing in 2015, Go has 25 keywords:
+As of this book's writing in 2015, Go has 25 reserved keywords: 
+
 `break`, `case`, `chan`, `const`, `continue`, `default`, `defer`, `else`, `fallthrough`, `for`, `func`, `go`, `goto`, `if`, `import`, `interface`, `map`, `package`, `range`, `return`, `select`, `struct`, `switch`, `type`, and `var`.
 
 The [Go Language Specification](https://go.dev/ref/spec?utm_source=chatgpt.com#Keywords) continues to list exactly these keywords.
 
 In addition, there are about three dozen *predeclared* names like `int` and `true` for built-in constants, types, and functions:
 
-| Constants         | Types                                                                 | Functions                                 |
-|-------------------|-----------------------------------------------------------------------|-------------------------------------------|
-| `true`            | `int`   `int8`   `int16`   `int32`   `int64`                         | `make`   `len`   `cap`   `new`            |
-| `false`           | `uint`  `uint8`  `uint16`  `uint32`  `uint64`  `uintptr`             | `append` `copy`  `close`  `delete`        |
-| `iota`            | `float32` `float64` `complex128` `complex64`                         | `complex` `real` `imag`                   |
-| `nil`             | `bool`  `byte`  `rune`  `string`  `error`                            | `panic`   `recover`                       |
+| Category  | Predeclared Names                                                                                                                                                           |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Constants | `true` `false` `iota` `nil`                                                                                                                                                 |
+| Types     | `int` `int8` `int16` `int32` `int64` `uint` `uint8` `uint16` `uint32` `uint64` `uintptr` `float32` `float64` `complex128` `complex64` `bool` `byte` `rune` `string` `error` |
+| Functions | `make` `len` `cap` `new` `append` `copy` `close` `delete` `complex` `real` `imag` `panic` `recover`                                                                         |
+
+These names are not reserved, so you may use them in declarations. There are a handful of scenarios where redeclaring one of them makes sense.
+
+If an entity is declared within a function, it is *local* to that function and not visible outside of it. If it is declared at the package level, it is *global* to the package and may be used by any function in that package.
+
+The case of the first letter of a name determines its visibility across package boundaries. If the name begins with an upper-case letter, it is *exported* and may be used by other packages, e.g. `Printf` in the `fmt` package. 
+
+Package names are always lower-case.
+
+There is no limit on name length, but convention and style in Go programs lean toward short names, especially for local variables and small scopes. Generally, the larger the scope of a name, the longer and more meaningful it should be.
+
+Sylistically, Go programmers use "camel case" when forming names, i.e. interior capital letters are preferred over interior underscores. The letters of acronyms like ASCII and HTML are always rendered in the same case, e.g. `htmlParser`, `HTMLEscape`, or `escapeHTML`, but not `escapeHtml`.
