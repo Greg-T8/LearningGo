@@ -14,11 +14,12 @@
 ## Go Commands 
 
 ```Go
-go run hello.go         // Run the program hello.go
-go build hello.go       // Build the program hello.go into an executable file
-go clean -cache         // Clean the Go build cache
-go build -x -v hello.go // Build the program with verbose output
-go doc http.Get         // Show documentation for the http.Get function
+go run hello.go                         // Run the program hello.go
+go fmt hello.go                         // Format the code in hello.go
+go build hello.go                       // Build the program hello.go into an executable file
+go clean -cache                         // Clean the Go build cache
+go build -x -v hello.go                 // Build the program with verbose output
+go doc http.Get                         // Show documentation for the http.Get function
 ```
 <!-- omit in toc -->
 ## Contents
@@ -35,6 +36,8 @@ go doc http.Get         // Show documentation for the http.Get function
   - [1.8 Loose Ends](#18-loose-ends)
 - [2. Program Structure](#2-program-structure)
   - [2.1 Names](#21-names)
+  - [2.2 Declarations](#22-declarations)
+  - [2.3 Variables](#23-variables)
 
 
 ## Overview and History of Go
@@ -917,3 +920,81 @@ Package names are always lower-case.
 There is no limit on name length, but convention and style in Go programs lean toward short names, especially for local variables and small scopes. Generally, the larger the scope of a name, the longer and more meaningful it should be.
 
 Sylistically, Go programmers use "camel case" when forming names, i.e. interior capital letters are preferred over interior underscores. The letters of acronyms like ASCII and HTML are always rendered in the same case, e.g. `htmlParser`, `HTMLEscape`, or `escapeHTML`, but not `escapeHtml`.
+
+### 2.2 Declarations
+
+A *declaration* names a program entity and specifies some or all of its properties.
+
+There are four major kinds of declarations: `var`, `const`, `type`, and `func`.
+
+A Go program is stored in one or more files with the `.go` extension. Each file begins with a package declaration that says what package the file is part of.
+
+The package declaration is followed by any import declarations and then a sequence of *package-level* declarations of types, varaibles, constants, and functions.
+
+```go
+// Boiling prints the boiling point of water.
+package main					// package-level declaration
+
+import "fmt"
+
+const boilingF = 212.0			// package-level declaration
+
+func main() {
+	f := boilingF				// local declaration
+	c := (f - 32) * 5 / 9
+	fmt.Printf("boiling point = %g degrees Fahrenheit or %g degrees Celsius\n", f, c)
+}
+```
+
+```go
+// Ftoc prints two Fahrenheit-to-Celsius conversions.
+package main
+
+import "fmt"
+
+func main() {
+	const freezingF, boilingF = 32.0, 212.0
+	fmt.Printf("%g degrees Fahrenheit = %g degrees Celsius\n", freezingF, fToC(freezingF))
+	fmt.Printf("%g degrees Fahrenheit = %g degrees Celsius\n", boilingF, fToC(boilingF))
+}
+
+func fToC(f float64) float64 {
+	return (f - 32) * 5 / 9
+}
+```
+
+### 2.3 Variables
+
+A `var` declaration creates a variable of a particular type, attaches a name to it, and sets its initial value.
+
+```go
+var name type = expression
+```
+
+Either the type or the `= expression` part may be omitted, but not both. 
+
+If the type is omitted, it is inferred from the expression. 
+
+If the expression is omitted, the initial value is the *zero value* for the type, which is `0` for numeric types, `false` for booleans, and `""` for strings. The zero value of an aggregate type like an array or struct is the zero value of each of its elements.
+
+The zero-value mechanism ensures a variable always holds a well-defined value of its type; *in Go there is no such thing as an uninitialized variable.*
+
+```go
+var s string        // declares a variable s of type string, initialized to the zero value ""  
+fmt.Println(s)      // prints an empty string rather than an error
+```
+
+You can declare and optionally initialize multiple variables in a single `var` declaration:
+
+```go
+var i, j, k int                     // declares three variables of type int, all initialized to 0
+b, f, s = true, 2.3, "four"         // declares and initializes three variables of different types, bool, float64, and string
+```
+
+Package-level variables are initialized before the `main` function is called. Local variables are initialized as their declarations are encountered during function execution.
+
+A set of variables can be initialized by calling a function that returns multiple values:
+
+```go
+var f, err = os.Open(name)      // declares two variables f and err, initialized by the return values of os.Open(name)
+```
