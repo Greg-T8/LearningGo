@@ -39,6 +39,7 @@ go doc http.Get                         // Show documentation for the http.Get f
   - [2.2 Declarations](#22-declarations)
   - [2.3 Variables](#23-variables)
     - [2.3.1 Short Variable Declarations](#231-short-variable-declarations)
+    - [2.3.2 Pointers](#232-pointers)
 
 
 ## Overview and History of Go
@@ -1010,6 +1011,13 @@ name := expression
 
 The type of `name` is inferred from the type of `expression`. 
 
+Behind the scenes, this is like writing:
+
+```go
+var name type = expression
+```
+Examples:
+
 ```go
 anim := gif.GIF{LoopCount: nframes}
 freq := rand.Float64() * 3.0
@@ -1024,7 +1032,7 @@ A `var` declaration tends to be reserved for local variables that need an explic
 i := 100                        // short variable declaration, i is of type int
 var boiling float64 = 100       // var declaration with initialization, boiling is of type float64
 
-var names []string              // variable initialized to the zero value of its type; value to be assigned later
+var names []string              // declares a variable names of type slice of string, initialized to the zero value nil
 var err error
 var p Point
 ```
@@ -1034,3 +1042,44 @@ In a short variable declaration, multiple variables may be declared and initiali
 ```go
 i, j := 0, 1
 ```
+
+However, declarations with mulitiple initializer expressions should only be used when they help readability, such as for short and natural groupings like the initialization part of a `for` loop.
+
+Keep in mind that `:=` is a declaration, whereas `=` is an assignment&mdash; `=` does not declare a new variable, it *requires* the variable already declared.
+
+Short-variable declarations may be used for calls to functions like `os.Open` that return multiple values:
+
+```go
+f, err := os.Open(name)
+if err != nil {
+    return err
+}
+// ...use f...
+f.Close()
+```
+
+**Important:** A short variable declaration does not necessarily *declare* all the variables on the left-hand side. If some of them were already declared in the same lexical block, then the short variable declaration acts as an assignment to those variables.
+
+```go
+in, err := os.Open(infile)         
+// ...
+out, err := os.Create(outfile)     // out is a new variable, but err is the same as before
+```
+
+A short variable declaration must declare at least one new variable, so the following code won't compile:
+
+```go
+f, err := os.Open(infile)
+// ...
+f, err := os.Create(outfile)        // error: no new variables on left side of := operator
+```
+
+To fix this, you can use an ordinary assignment for the second statement:
+
+```go
+f, err := os.Create(outfile)        
+// ...
+f, err = os.Create(outfile)        // ordinary assignment, reusing f and err
+```
+
+#### 2.3.2 Pointers
