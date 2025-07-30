@@ -38,6 +38,7 @@ go doc http.Get                         // Show documentation for the http.Get f
   - [2.1 Names](#21-names)
   - [2.2 Declarations](#22-declarations)
   - [2.3 Variables](#23-variables)
+    - [2.3.1 Short Variable Declarations](#231-short-variable-declarations)
 
 
 ## Overview and History of Go
@@ -988,7 +989,7 @@ You can declare and optionally initialize multiple variables in a single `var` d
 
 ```go
 var i, j, k int                     // declares three variables of type int, all initialized to 0
-b, f, s = true, 2.3, "four"         // declares and initializes three variables of different types, bool, float64, and string
+var b, f, s = true, 2.3, "four"         // declares and initializes three variables of different types, bool, float64, and string
 ```
 
 Package-level variables are initialized before the `main` function is called. Local variables are initialized as their declarations are encountered during function execution.
@@ -997,4 +998,39 @@ A set of variables can be initialized by calling a function that returns multipl
 
 ```go
 var f, err = os.Open(name)      // declares two variables f and err, initialized by the return values of os.Open(name)
+```
+
+#### 2.3.1 Short Variable Declarations
+
+Within a function, an alternate form called a *short variable declaration* may be used to declare and inintialize local variables:
+
+```go
+name := expression
+```
+
+The type of `name` is inferred from the type of `expression`. 
+
+```go
+anim := gif.GIF{LoopCount: nframes}
+freq := rand.Float64() * 3.0
+t    := 0.0
+```
+
+Short-variable declarations are used to declare and initialize the majority of local variables.
+
+A `var` declaration tends to be reserved for local variables that need an explicit type that differs from that of the initializer expression, or for when the variable will be assigned a value later and its initial value is not important.
+
+```go
+i := 100                        // short variable declaration, i is of type int
+var boiling float64 = 100       // var declaration with initialization, boiling is of type float64
+
+var names []string              // variable initialized to the zero value of its type; value to be assigned later
+var err error
+var p Point
+```
+
+In a short variable declaration, multiple variables may be declared and initialized in a single statement:
+
+```go
+i, j := 0, 1
 ```
