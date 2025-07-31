@@ -1128,21 +1128,32 @@ fmt.Println(x)		// "2"
 
 When you have a variable made up of multiple parts — like the fields in a `struct` or items in an array — each part is its own variable and also has its own memory address.
 
-Here's an example using a `struct`:
+Variables are sometimes called “addressable values” because they occupy a specific location in memory. Only expressions that refer to variables can be used with the `&` operator to get their memory address.
+
+By default, a pointer that hasn't been assigned a value is `nil`, meaning it doesn't point to anything. You can check if a pointer `p` is valid by testing `p != nil`. This will be true if `p` actually points to a variable.
+
+You can also compare pointers: two pointers are considered equal if they both point to the same memory location — or if they’re both `nil`.
 
 ```go
-type Point struct {
-    X int
-    Y int
-}
-
-pointPtr := &Point{X: 1, Y: 2}  // pointPtr is a pointer to a Point struct
-
-fmt.Println(pointPtr.X)        // prints "1"
-
-pointPtr.X = 3                 // updates the X field; same as (*pointPtr).X = 3
-
-fmt.Println(pointPtr.X)        // prints "3"
+var x, y int
+fmt.Println(&x == &x, &x == &y, &x == nil)	// "true false false"
 ```
 
-Although `pointPtr` is a pointer, Go makes it easy by letting you access fields like `pointPtr.X` instead of writing `(*pointPtr).X`. Go takes care of the pointer dereferencing for you automatically.
+It is perfectly safe for a function to return the address of a local variable. In the following code, the local variable `v` created by this call to `f()`will remain in existence even after the call has returned, and the pointer `p` will still refer to it.
+
+```go
+var p = f()         // p is a pointer to the local variable v created by f()
+
+func f() *int {     // f returns a pointer to a local variable
+	v := 1
+	return &v       // returns the address of v
+}
+```
+
+Each call of `f()` returns a distinct value:
+
+```go
+fmt.Println(f() == f())     // "false"
+```
+
+Because a pointer contains the address of a variable...
