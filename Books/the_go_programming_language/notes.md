@@ -1083,3 +1083,66 @@ f, err = os.Create(outfile)        // ordinary assignment, reusing f and err
 ```
 
 #### 2.3.2 Pointers
+
+A *variable* is a piece of storage containing a value.
+
+Variables created by declarations are identified bya name, such as `x`, but many variables are identified only by expressions like `x[i]` or `x.f`.
+
+All of these expressions read the value of a variable, except when they appear on the left-hand side of an assignment, in which case a new value is assigned to the variable.
+
+A *pointer* value is the *address* of a variable. A pointer is thus the location at which a value is stored. Not every value has an address, but every variable does.
+
+With a pointer, you can read or update the value of a variable *indirectly* without using or even knowing the name of the variable.
+
+If you declare a variable like `var x int`, then using `&x` gives you the memory address where `x` is stored. This address is represented by a value of type `*int`, which means "a pointer to an integer."
+
+```go
+x := 1
+println(&x)			// Using &x to get the address of x, i.e. printing the address of x
+```
+If you assign this address to a variable named `p`, you can say that "p points to x" — in other words, `p` holds the memory address where `x` is stored.
+
+```go
+x := 1
+p := &x 	        // p is a pointer to x, i.e. p holds the address of x
+```
+To access the value that `p` points to, you write `*p`. This gives you the actual integer stored at that memory address. 
+
+```go
+println(*p)		    // Using *p to dereference p, i.e. printing the value at the address stored in p
+```
+
+Since `*p` refers to a variable, you can also use it on the left side of an assignment to change its value — that is, update the variable that `p` points to.
+
+```go
+*p = 2			    // Using *p to change the value at the address stored in p
+```
+
+```go
+x := 1
+p := &x				// p, of type *int, points to x
+fmt.Println(*p)		// "1"
+*p = 2				// equivalent to x = 2
+fmt.Println(x)		// "2"
+```
+
+When you have a variable made up of multiple parts — like the fields in a `struct` or items in an array — each part is its own variable and also has its own memory address.
+
+Here's an example using a `struct`:
+
+```go
+type Point struct {
+    X int
+    Y int
+}
+
+pointPtr := &Point{X: 1, Y: 2}  // pointPtr is a pointer to a Point struct
+
+fmt.Println(pointPtr.X)        // prints "1"
+
+pointPtr.X = 3                 // updates the X field; same as (*pointPtr).X = 3
+
+fmt.Println(pointPtr.X)        // prints "3"
+```
+
+Although `pointPtr` is a pointer, Go makes it easy by letting you access fields like `pointPtr.X` instead of writing `(*pointPtr).X`. Go takes care of the pointer dereferencing for you automatically.
