@@ -40,6 +40,7 @@ go doc http.Get                         // Show documentation for the http.Get f
   - [2.3 Variables](#23-variables)
     - [2.3.1 Short Variable Declarations](#231-short-variable-declarations)
     - [2.3.2 Pointers](#232-pointers)
+    - [The `new` Function](#the-new-function)
 
 
 ## Overview and History of Go
@@ -1223,4 +1224,30 @@ Usage of C:\Users\gregt\LocalCode\LearningGo\Books\the_go_programming_language\c
   -n    omit trailing newline
   -s string
         separator (default " ")
+```
+
+#### The `new` Function
+
+Another way to create a variable is to use the built-in `new` function. The expression `new(T)` creates an *unnamed variable* of type `T`, initializes it to the zero value of `T`, and returns its address, which is a value of type `*T`.
+
+```go
+p := new(int)		// p, of type *int, points to an unnamed int variable
+fmt.Println(*p)		// "0" is printed, dereferencing p to get the value it points to
+*p = 2				// sets the unnamed int to 2
+fmt.Println(*p)		// "2" is printed, dereferencing p again
+```
+
+A variable created with `new` works just like a regular local variable whose address is taken. The difference is that `new` doesn't require you to create and name a dummy variable. 
+
+You can also use `new(T)` directly in an expression. So, `new` is just a convenience feature, not a core language concept. For example, the two `newInt` functions below behave the same way, even if one uses `new` and the other doesn’t.
+
+```go
+func newInt() *int {
+	var dummy int
+	return &dummy
+}
+
+func newInt() *int {
+	return new(int)
+}
 ```

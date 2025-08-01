@@ -1,16 +1,14 @@
 package main
 
-var f, err = os.Open(name)
+func main() {
 
-func incr(p *int) {
-	*p++				// increments what p points to; does not change p
-	return *p
+func newInt() *int {
+	return new(int)
 }
 
-v := 1
-incr(&v)				// side effect:  v is now 2
-fmt.Println(incr(&v))	// "3" (and v is 3
-
-func main() {
+func newInt() *int {
+	var dummy int
+	return &dummy
+}
 
 }
