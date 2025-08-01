@@ -40,7 +40,8 @@ go doc http.Get                         // Show documentation for the http.Get f
   - [2.3 Variables](#23-variables)
     - [2.3.1 Short Variable Declarations](#231-short-variable-declarations)
     - [2.3.2 Pointers](#232-pointers)
-    - [The `new` Function](#the-new-function)
+    - [2.3.3 The `new` Function](#233-the-new-function)
+    - [2.3.4 Lifetime of Variables](#234-lifetime-of-variables)
 
 
 ## Overview and History of Go
@@ -1226,7 +1227,7 @@ Usage of C:\Users\gregt\LocalCode\LearningGo\Books\the_go_programming_language\c
         separator (default " ")
 ```
 
-#### The `new` Function
+#### 2.3.3 The `new` Function
 
 Another way to create a variable is to use the built-in `new` function. The expression `new(T)` creates an *unnamed variable* of type `T`, initializes it to the zero value of `T`, and returns its address, which is a value of type `*T`.
 
@@ -1243,11 +1244,32 @@ You can also use `new(T)` directly in an expression. So, `new` is just a conveni
 
 ```go
 func newInt() *int {
-	var dummy int
+	var dummy int           // Using a named int variable
 	return &dummy
 }
 
 func newInt() *int {
-	return new(int)
+	return new(int)         // Convenience: creates an unnamed int variable and returns its address
 }
 ```
+Each call to `new()` returns a distinct variable with a unique address:
+
+```go
+p := new(int)
+q := new(int)
+fmt.Println(p == q)		    // false, p and q point to different memory addresses
+```
+
+There is one exception to this rule: two variables whose type carries no information and is therefore of size zero, such as `struct{}` or `[0]int`, may, depending on the implementation, have the same address.
+
+The `new` function is rarely used because the most common unnamed variables are of struct types, for which the `struct` literal syntax is more flexible.
+
+Since `new` is a predeclared function, not a keyword, it is possible to redefine the meaning for something else within a function:
+
+```go
+func delta(old, new int) int { return new - old }           // Redefining new, as it is a predeclared function, not a keyword
+```
+
+This means the built-in `new` function is not available in the scope of the `delta` function.
+
+#### 2.3.4 Lifetime of Variables
