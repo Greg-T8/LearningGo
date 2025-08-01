@@ -1156,4 +1156,71 @@ Each call of `f()` returns a distinct value:
 fmt.Println(f() == f())     // "false"
 ```
 
-Because a pointer contains the address of a variable...
+A pointer holds a variable’s address. So, when you pass a pointer to a function, the function can modify the original variable indirectly.
+
+```go
+func incr(p *int) {
+	*p++				// increments what p points to; does not change p, which still points to the same variable
+	return *p           // *p is an alias for v
+}
+
+v := 1
+incr(&v)				// side effect:  v is now 2
+fmt.Println(incr(&v))	// "3" (and v is 3)
+```
+
+Each time we take the address of a variable or copy a pointer, we create new aliases or ways to identify the same variable. For example, `*p` is an alias for `v`. 
+
+Pointer aliasing is useful because it allows us to access a variable without using its name. But, this is a double-edged sword: to find all the statements that access a variable, we have to know all its aliases.
+
+It's not just pointers that create aliases; aliasing also occurs when we copy values of other reference types, like slices, maps, channels, structs, arrays, and interfaces.
+
+Pointers are key to the `flag` package, which uses a program's command-line arguments to set the values of certain variables distributed throughout the program. 
+
+```go
+// Echo4 prints its command-line arguments.
+package main
+
+import (
+	"flag"
+	"fmt"
+	"strings"
+)
+
+var (
+	// Optional command-line flags to control the output.
+
+	// flag.Bool() arguments: <name>, <default value>, <help message>; returns a pointer to a bool
+	n = flag.Bool("n", false, "omit trailing newline")
+
+	// flag.String() arguments: <name>, <default value>, <help message>; returns a pointer to a string
+	sep = flag.String("s", " ", "separator")
+)
+
+func main() {
+	flag.Parse()
+	fmt.Print(strings.Join(flag.Args(), *sep)) // Non-flag arguments are accessed via flag.Args();
+	if !*n {                                   // n is a pointer to a bool, so we dereference it with *
+		fmt.Println()
+	}
+}
+```
+
+```pwsh
+go build .\echo4.go
+
+.\echo4.exe a bc def                
+a bc def
+
+.\echo4.exe -s / abc def            # Using the -s flag to set a custom separator
+abc/def
+
+.\echo4.exe -n a bc def             # Using the -n flag to omit the trailing newline
+a bc def                            # Note: no newline at the end
+
+.\echo4.exe -help
+Usage of C:\Users\gregt\LocalCode\LearningGo\Books\the_go_programming_language\ch02\echo4.exe:
+  -n    omit trailing newline
+  -s string
+        separator (default " ")
+```
