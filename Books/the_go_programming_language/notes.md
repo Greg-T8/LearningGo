@@ -1273,3 +1273,54 @@ func delta(old, new int) int { return new - old }           // Redefining new, a
 This means the built-in `new` function is not available in the scope of the `delta` function.
 
 #### 2.3.4 Lifetime of Variables
+
+A variable’s lifetime is the period during program execution when it exists.
+
+Package-level variables last for the entire program run.
+
+Local variables have dynamic lifetimes: a new instance is created each time the declaration is executed and remains until it becomes unreachable, after which its memory can be reused.
+
+Function parameters and return values are also local variables, created each time the function is called.
+For example, in the Lissajous program from Section 1.4:
+
+```go
+for t := 0.0; t < cycles*2*math.Pi; t += res {
+    x := math.Sin(t)
+    y := math.Sin(t*freq + phase)
+    img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), blackIndex)
+}
+```
+
+Here, `t` is created at the start of each loop execution.
+`x` and `y` are created on each iteration.
+
+The garbage collector reclaims a variable’s memory when no active reference path exists from any package-level variable or any local variable in a currently running function.
+If no such path exists, the variable is unreachable and can be discarded.
+
+Because lifetime depends on reachability, a local variable may survive beyond a single loop iteration or even after its enclosing function returns.
+
+A compiler may allocate local variables on either the heap or the stack, and this choice is not determined by whether they were declared with `var` or `new`.
+
+```go
+var global *int
+
+func f() {
+    var x int
+    x = 1
+    global = &x             // x escapes from f, so it must be heap-allocated
+}
+
+func g() {                  
+    y := new(int)
+    *y = 1                  // y does not escape from g, so it can be stack-allocated
+}
+```
+
+In `f`, `x` must be heap-allocated because it remains reachable through `global` after `f` returns—`x` escapes from `f`.
+In `g`, `*y` becomes unreachable once the function returns, so it can be recycled. Since `*y` does not escape, the compiler can place it on the stack, even though it was created with `new`.
+
+Escape analysis is not required for writing correct programs, but it matters for performance—variables that escape require extra memory allocation.
+
+Garbage collection makes writing correct code easier, but you still need to think about memory.
+
+Holding references to short-lived objects inside long-lived objects (especially globals) can prevent the garbage collector from reclaiming them.
