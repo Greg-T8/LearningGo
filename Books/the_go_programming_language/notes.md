@@ -42,6 +42,9 @@ go doc http.Get                         // Show documentation for the http.Get f
     - [2.3.2 Pointers](#232-pointers)
     - [2.3.3 The `new` Function](#233-the-new-function)
     - [2.3.4 Lifetime of Variables](#234-lifetime-of-variables)
+  - [2.4 Assignments](#24-assignments)
+    - [2.4.1 Tuple Assignment](#241-tuple-assignment)
+    - [2.4.2 Assignability](#242-assignability)
 
 
 ## Overview and History of Go
@@ -1311,8 +1314,8 @@ func f() {
 }
 
 func g() {                  
-    y := new(int)
-    *y = 1                  // y does not escape from g, so it can be stack-allocated
+    y := new(int)           // y does not escape from g, so it can be stack-allocated
+    *y = 1                  
 }
 ```
 
@@ -1324,3 +1327,119 @@ Escape analysis is not required for writing correct programs, but it matters for
 Garbage collection makes writing correct code easier, but you still need to think about memory.
 
 Holding references to short-lived objects inside long-lived objects (especially globals) can prevent the garbage collector from reclaiming them.
+
+### 2.4 Assignments
+
+An assignment statement updates a variable’s value. In its simplest form, the variable is on the left of `=` and an expression is on the right.
+
+```go
+x = 1                               // named variable
+*p = true                           // indirect variable
+person.name = "bob"                 // struct field
+count[x] = count[x] * scale         // array, slice, or map element
+```
+
+Each arithmetic and bitwise binary operator has an assignment form, so the last example can be written as:
+
+```go
+count[x] *= scale
+```
+
+This avoids repeating (and re-evaluating) the variable expression.
+
+Numeric variables can also be updated with increment (`++`) and decrement (`--`):
+
+```go
+v := 1
+v++         // same as v = v + 1; v becomes 2
+v--         // same as v = v - 1; v becomes 1
+```
+
+#### 2.4.1 Tuple Assignment
+
+Tuple assignment lets you assign values to multiple variables in a single statement. All right-hand side expressions are evaluated before any variables are updated, which is useful when variables appear on both sides, such as in swaps:
+
+```go
+x, y = y, x                     // swap the values of x and y
+a[i], a[j] = a[j], a[i]         // swap the elements of a at indices i and j
+```
+
+It’s also handy in algorithms like computing the greatest common divisor:
+
+```go
+func gcd(x, y int) int {
+    for y != 0 {
+        x, y = y, x%y           // swap x and y, then set y to the remainder of x divided by y
+    }
+    return x
+}
+```
+
+Or for calculating the n-th Fibonacci number iteratively:
+
+```go
+func fib(n int) int {
+    x, y := 0, 1
+    for i := 0; i < n; i++ {
+        x, y = y, x+y           // swap x and y, then set y to the sum of x and y
+    }
+    return x
+}
+```
+
+Tuple assignment can make trivial assignments compact:
+
+```go
+i, j, k = 2, 3, 5
+```
+
+However, if the expressions are complex, use separate statements for readability.
+
+Some expressions produce multiple results, such as function calls. In that case, the left-hand side must have the same number of variables:
+
+```go
+f, err = os.Open("foo.txt")         // returns two values
+```
+
+Often, the extra value signals an error or a boolean “ok” flag. The same pattern applies to:
+
+```go
+v, ok = m[key]          // map lookup
+v, ok = x.(T)           // type assertion
+v, ok = <-ch            // channel receive
+```
+
+Unwanted values can be discarded with the blank identifier:
+
+```go
+_, err = io.Copy(dst, src)      // ignore byte count
+_, ok = x.(T)                   // check type, discard result
+```
+
+#### 2.4.2 Assignability
+
+Assignment statements are explicit assignments, but assignments also happen implicitly in several cases:
+
+* A function call assigns argument values to the corresponding parameters.
+* A return statement assigns the return values to the corresponding result variables.
+* A composite literal assigns values to its elements. For example:
+
+```go
+medals := []string{"gold", "silver", "bronze"}
+```
+
+is equivalent to:
+
+```go
+medals[0] = "gold"
+medals[1] = "silver"
+medals[2] = "bronze"
+```
+
+Elements of maps and channels, though not standard variables, also receive values through implicit assignment.
+
+An assignment—explicit or implicit—is valid if the variable’s type and the value’s type match, or if the value is assignable to the variable’s type. For types covered so far, this means the types must match exactly, with `nil` allowed for interface or reference types.
+
+Constants have more flexible assignability rules, often avoiding explicit conversions.
+
+Comparability (`==` and `!=`) is related to assignability: in a comparison, one operand must be assignable to the other’s type.
