@@ -45,6 +45,7 @@ go doc http.Get                         // Show documentation for the http.Get f
   - [2.4 Assignments](#24-assignments)
     - [2.4.1 Tuple Assignment](#241-tuple-assignment)
     - [2.4.2 Assignability](#242-assignability)
+    - [2.5 Type Declarations](#25-type-declarations)
 
 
 ## Overview and History of Go
@@ -1443,3 +1444,91 @@ An assignment—explicit or implicit—is valid if the variable’s type and the
 Constants have more flexible assignability rules, often avoiding explicit conversions.
 
 Comparability (`==` and `!=`) is related to assignability: in a comparison, one operand must be assignable to the other’s type.
+
+#### 2.5 Type Declarations
+
+A variable’s type defines what values it can hold, how those values are stored, what operations are valid, and which methods are available.
+
+Different variables may share the same underlying representation but mean very different things. For example, an `int` might store a loop index, a timestamp, a file descriptor, or a month. A `float64` could represent speed or temperature, and a `string` could be a password or a color name.
+
+A type declaration creates a new named type based on an existing type:
+
+```go
+type name underlying-type
+```
+
+Named types have the same underlying type as the original but are treated as distinct. This prevents unintended mixing of incompatible concepts. If the name is exported (starts with an uppercase letter) and declared at package level, it is available outside the package.
+
+**Example** — defining Celsius and Fahrenheit as distinct types:
+
+```go
+package tempconv
+
+import "fmt"
+
+type Celsius float64
+type Fahrenheit float64
+
+const (
+    AbsoluteZeroC Celsius = -273.15
+    FreezingC     Celsius = 0
+    BoilingC      Celsius = 100
+)
+
+func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
+func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
+```
+
+Although both `Celsius` and `Fahrenheit` use `float64` underneath, they cannot be compared or combined directly. Conversions like `Celsius(t)` or `Fahrenheit(t)` make the meaning explicit and do not change the stored value.
+
+The functions `CToF` and `FToC` actually change the value to represent a different scale.
+
+For any type `T`, `T(x)` converts `x` to `T`. Conversions are allowed if both types share the same underlying type, or if both are unnamed pointer types pointing to the same underlying type. These conversions change the type but not the representation.
+
+Conversions are also allowed between numeric types, and between strings and certain slices. These may change the representation — for example, converting a float to an integer drops the fractional part, and converting a string to a `[]byte` makes a copy of its data.
+
+All type conversions succeed at runtime.
+
+The underlying type of a named type defines its structure, representation, and the intrinsic operations it supports — exactly as if the underlying type were used directly.
+
+For example, arithmetic works for `Celsius` and `Fahrenheit` just like for `float64`:
+
+```go
+fmt.Printf("%g\n", BoilingC - FreezingC)          // "100" °C, %g prints a floating-point number, automatically choosing the best format, i.e. decimal or scientific notation
+boilingF := CToF(BoilingC)
+fmt.Printf("%g\n", boilingF - CToF(FreezingC))    // "180" °F
+fmt.Printf("%g\n", boilingF - FreezingC)          // compile error: type mismatch
+```
+
+Comparison operators also work between values of the same named type, or between a named type and an unnamed type with the same underlying type. But you can’t directly compare two different named types:
+
+```go
+var c Celsius
+var f Fahrenheit
+fmt.Println(c == 0)                 // "true"
+fmt.Println(f >= 0)                 // "true"
+fmt.Println(c == f)                 // compile error: type mismatch
+fmt.Println(c == Celsius(f))        // "true"
+```
+
+Here, `Celsius(f)` doesn’t change `f`’s value, only its type. Both `c` and `f` are zero, so the comparison is true.
+
+Named types are more useful when the underlying type is complex, as they avoid repeating long type expressions. They also allow defining methods for added behavior.
+
+For example, a `String` method for `Celsius`:
+
+```go
+func (c Celsius) String() string { return fmt.Sprintf("%g°C", c) }
+```
+
+The `String` method controls how values print when used with `fmt`:
+
+```go
+c := FToC(212.0)
+fmt.Println(c.String())         // "100°C"
+fmt.Printf("%v\n", c)           // "100°C", %v means "default format": it prints the value based on its type
+fmt.Printf("%s\n", c)           // "100°C", %s means "string format": interprets the value as a string
+fmt.Println(c)                  // "100°C"
+fmt.Printf("%g\n", c)           // "100" — does not call String
+fmt.Println(float64(c))         // "100" — does not call String
+```
