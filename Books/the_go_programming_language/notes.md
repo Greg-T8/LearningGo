@@ -47,6 +47,7 @@ go doc http.Get                         // Show documentation for the http.Get f
     - [2.4.2 Assignability](#242-assignability)
     - [2.5 Type Declarations](#25-type-declarations)
     - [2.6 Packages and Files](#26-packages-and-files)
+      - [2.6.1 Imports](#261-imports)
 
 
 ## Overview and History of Go
@@ -1560,7 +1561,7 @@ const (
     BoilingC      Celsius = 100
 )
 
-func (c Celsius) String() string    { return fmt.Sprintf("%g°C", c) }
+func (c Celsius) String() string    { return fmt.Sprintf("%g°C", c) }           // Sprintf returns a formatted string without printing
 func (f Fahrenheit) String() string { return fmt.Sprintf("%g°F", f) }
 ```
 and the conversion functions in conv.go:
@@ -1596,5 +1597,61 @@ A package-level doc comment should be placed immediately before the package decl
 
 **Exercise 2.1:** Add types, constants, and functions to tempconv for processing temperatures in the Kelvin scale, where zero Kelvin is −273.15°C and a difference of 1K has the same magnitude as 1°C.
 
-- [tempconv/tempconv.go](ch02/2.6/ex_2.1/tempconv/tempconv.go)
-- [tempconv/conv.go](ch02/2.6/ex_2.1/tempconv/conv.go)
+- [tempconv/tempconv.go](ch02/2.6/tempconv/tempconv.go)
+- [tempconv/conv.go](ch02/2.6/tempconv/conv.go)
+
+##### 2.6.1 Imports
+
+Within a Go program, each package is identified by an import path, the string that appears in an `import` declaration such as `"gopl.io/ch2/tempconv"`. The Go specification doesn’t define the meaning of these strings; tools like the `go` command interpret them. With the `go` tool, an import path corresponds to a directory containing one or more `.go` files that form the package.
+
+Besides its import path, every package has a package name, declared at the top of its files. By convention, this name is the last segment of the import path. For example, the package name for `gopl.io/ch2/tempconv` is `tempconv`.
+
+To use it, we import the package in another program:
+
+```go
+// Cf converts its numeric argument to Celsius and Fahrenheit.
+package main
+
+import (
+    "fmt"
+    "os"
+    "strconv"      
+
+    "gopl.io/ch2/tempconv"                                  // Importing the tempconv package
+)
+
+func main() {
+    for _, arg := range os.Args[1:] {                       // os.Args[1:] skips the program name
+        t, err := strconv.ParseFloat(arg, 64)      
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "cf: %v\n", err)         // %v means "default format": it prints the value based on its type
+            os.Exit(1)                                      // Fprintf formats a string and writes it to the specified output, here os.Stderr
+        }
+        f := tempconv.Fahrenheit(t)
+        c := tempconv.Celsius(t)
+        fmt.Printf("%s = %s, %s = %s\n",                    // %s means "string format": interprets the value as a string
+            f, tempconv.FToC(f), c, tempconv.CToF(c))
+    }
+}
+```
+
+The import binds a short name to the package, which is used to access its members, like `tempconv.CToF`. By default, this short name matches the package name, but an alternative name can be specified to avoid conflicts, e.g.:
+```go
+import tc "gopl.io/ch2/tempconv"  // Importing tempconv as tc
+```
+
+The `cf` program converts a numeric command-line argument into both Celsius and Fahrenheit:
+
+```bash
+$ go build gopl.io/ch2/cf
+$ ./cf 32
+32°F = 0°C, 32°C = 89.6°F
+$ ./cf 212
+212°F = 100°C, 212°C = 413.6°F
+$ ./cf -40
+-40°F = -40°C, -40°C = -40°F
+```
+
+Go reports an error if a package is imported but never used. This prevents unnecessary dependencies but can be inconvenient while debugging. For example, removing the only use of `log` might leave an unused import, which then causes a compile error. In that case, the import must be removed or commented out.
+
+A better solution is to use the `goimports` tool (`golang.org/x/tools/cmd/goimports`). It automatically adds and removes imports as needed and formats the code in Go’s standard style, just like `gofmt`. Most editors can be set up to run `goimports` on save.
