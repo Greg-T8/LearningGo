@@ -1595,3 +1595,6 @@ fmt.Println(tempconv.CToF(tempconv.BoilingC)) // "212°F"
 A package-level doc comment should be placed immediately before the package declaration. It typically starts with a one-sentence summary of the package. Only one file in the package should contain this comment. Larger documentation is often put in a dedicated `doc.go` file.
 
 **Exercise 2.1:** Add types, constants, and functions to tempconv for processing temperatures in the Kelvin scale, where zero Kelvin is −273.15°C and a difference of 1K has the same magnitude as 1°C.
+
+- [tempconv/tempconv.go](ch02/2.6/ex_2.1/tempconv/tempconv.go)
+- [tempconv/conv.go](ch02/2.6/ex_2.1/tempconv/conv.go)
