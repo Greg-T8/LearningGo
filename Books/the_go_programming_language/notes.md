@@ -46,6 +46,7 @@ go doc http.Get                         // Show documentation for the http.Get f
     - [2.4.1 Tuple Assignment](#241-tuple-assignment)
     - [2.4.2 Assignability](#242-assignability)
     - [2.5 Type Declarations](#25-type-declarations)
+    - [2.6 Packages and Files](#26-packages-and-files)
 
 
 ## Overview and History of Go
@@ -1532,3 +1533,65 @@ fmt.Println(c)                  // "100°C"
 fmt.Printf("%g\n", c)           // "100" — does not call String
 fmt.Println(float64(c))         // "100" — does not call String
 ```
+
+#### 2.6 Packages and Files
+
+In Go, packages serve the same role as libraries or modules in other languages. They provide modularity, encapsulation, separate compilation, and reuse. A package’s source code is stored in one or more `.go` files, typically within a directory whose name matches its import path. For example, the files for the `gopl.io/ch1/helloworld` package are found in `$GOPATH/src/gopl.io/ch1/helloworld`.
+
+Each package is its own namespace. For instance, `image.Decode` and `utf16.Decode` are different functions, even though they share the same name. To use a function from another package, you must qualify it with the package name.
+
+Packages also control visibility. Identifiers that begin with an uppercase letter are exported and available outside the package; those starting with a lowercase letter remain internal.
+
+Suppose our temperature conversion program becomes popular and we want to share it as a package. We can create `gopl.io/ch2/tempconv`, a variation of our earlier example. Although a small package like this would usually need just one file, here we’ll split it into two files to show how declarations across multiple files in a package work. In `tempconv.go`, we define the types, constants, and methods:
+
+[tempconv/tempconv.go]()
+```go
+// Package tempconv performs Celsius and Fahrenheit conversions.
+package tempconv
+
+import "fmt"
+
+type Celsius float64
+type Fahrenheit float64
+
+const (
+    AbsoluteZeroC Celsius = -273.15
+    FreezingC     Celsius = 0
+    BoilingC      Celsius = 100
+)
+
+func (c Celsius) String() string    { return fmt.Sprintf("%g°C", c) }
+func (f Fahrenheit) String() string { return fmt.Sprintf("%g°F", f) }
+```
+and the conversion functions in conv.go:
+
+[tempconv/conv.go]()
+```go
+package tempconv
+
+// CToF converts a Celsius temperature to Fahrenheit.
+func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9/5 + 32) }
+
+// FToC converts a Fahrenheit temperature to Celsius.
+func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
+```
+
+Each file begins with a package declaration that defines the package name. When imported, its members are accessed with the package qualifier, such as `tempconv.CToF`.
+
+All package-level names, like types and constants, are shared across files in the same package as if they were in a single source file. For example, `tempconv.go` imports `fmt`, but `conv.go` does not, since it doesn’t need it.
+
+Because the constants are exported (they start with uppercase letters), they can be accessed directly:
+
+```go
+fmt.Printf("Brrrr! %v\n", tempconv.AbsoluteZeroC) // "Brrrr! -273.15°C"
+```
+
+To convert Celsius to Fahrenheit in another package that imports `gopl.io/ch2/tempconv`, you can write:
+
+```go
+fmt.Println(tempconv.CToF(tempconv.BoilingC)) // "212°F"
+```
+
+A package-level doc comment should be placed immediately before the package declaration. It typically starts with a one-sentence summary of the package. Only one file in the package should contain this comment. Larger documentation is often put in a dedicated `doc.go` file.
+
+**Exercise 2.1:** Add types, constants, and functions to tempconv for processing temperatures in the Kelvin scale, where zero Kelvin is −273.15°C and a difference of 1K has the same magnitude as 1°C.
