@@ -1,18 +1,17 @@
 <!-- omit in toc -->
 # 2. Program Structure
 - [2.1 Names](#21-names)
-  - [2.2 Declarations](#22-declarations)
-  - [2.3 Variables](#23-variables)
-    - [2.3.1 Short Variable Declarations](#231-short-variable-declarations)
-    - [2.3.2 Pointers](#232-pointers)
-    - [2.3.3 The `new` Function](#233-the-new-function)
-    - [2.3.4 Lifetime of Variables](#234-lifetime-of-variables)
-  - [2.4 Assignments](#24-assignments)
-    - [2.4.1 Tuple Assignment](#241-tuple-assignment)
-    - [2.4.2 Assignability](#242-assignability)
-    - [2.5 Type Declarations](#25-type-declarations)
-    - [2.6 Packages and Files](#26-packages-and-files)
-      - [2.6.1 Imports](#261-imports)
+- [2.2 Declarations](#22-declarations)
+- [2.3 Variables](#23-variables)
+  - [2.3.1 Short Variable Declarations](#231-short-variable-declarations)
+  - [2.3.2 Pointers](#232-pointers)
+  - [2.3.3 The `new` Function](#233-the-new-function)
+  - [2.3.4 Lifetime of Variables](#234-lifetime-of-variables)
+  - [2.4.1 Tuple Assignment](#241-tuple-assignment)
+  - [2.4.2 Assignability](#242-assignability)
+- [2.5 Type Declarations](#25-type-declarations)
+- [2.6 Packages and Files](#26-packages-and-files)
+  - [2.6.1 Imports](#261-imports)
 
 
 ## 2.1 Names
@@ -47,7 +46,7 @@ There is no limit on name length, but convention and style in Go programs lean t
 
 Sylistically, Go programmers use "camel case" when forming names, i.e. interior capital letters are preferred over interior underscores. The letters of acronyms like ASCII and HTML are always rendered in the same case, e.g. `htmlParser`, `HTMLEscape`, or `escapeHTML`, but not `escapeHtml`.
 
-### 2.2 Declarations
+## 2.2 Declarations
 
 A *declaration* names a program entity and specifies some or all of its properties.
 
@@ -89,7 +88,7 @@ func fToC(f float64) float64 {
 }
 ```
 
-### 2.3 Variables
+## 2.3 Variables
 
 A `var` declaration creates a variable of a particular type, attaches a name to it, and sets its initial value.
 
@@ -125,7 +124,7 @@ A set of variables can be initialized by calling a function that returns multipl
 var f, err = os.Open(name)      // declares two variables f and err, initialized by the return values of os.Open(name)
 ```
 
-#### 2.3.1 Short Variable Declarations
+### 2.3.1 Short Variable Declarations
 
 Within a function, an alternate form called a *short variable declaration* may be used to declare and inintialize local variables:
 
@@ -206,7 +205,7 @@ f, err := os.Create(outfile)
 f, err = os.Create(outfile)        // ordinary assignment, reusing f and err
 ```
 
-#### 2.3.2 Pointers
+### 2.3.2 Pointers
 
 A *variable* is a piece of storage containing a value.
 
@@ -349,7 +348,7 @@ Usage of C:\Users\gregt\LocalCode\LearningGo\Books\the_go_programming_language\c
         separator (default " ")
 ```
 
-#### 2.3.3 The `new` Function
+### 2.3.3 The `new` Function
 
 Another way to create a variable is to use the built-in `new` function. The expression `new(T)` creates an *unnamed variable* of type `T`, initializes it to the zero value of `T`, and returns its address, which is a value of type `*T`.
 
@@ -394,7 +393,7 @@ func delta(old, new int) int { return new - old }           // Redefining new, a
 
 This means the built-in `new` function is not available in the scope of the `delta` function.
 
-#### 2.3.4 Lifetime of Variables
+### 2.3.4 Lifetime of Variables
 
 A variable’s lifetime is the period during program execution when it exists.
 
@@ -447,7 +446,7 @@ Garbage collection makes writing correct code easier, but you still need to thin
 
 Holding references to short-lived objects inside long-lived objects (especially globals) can prevent the garbage collector from reclaiming them.
 
-### 2.4 Assignments
+# 2.4 Assignments
 
 An assignment statement updates a variable’s value. In its simplest form, the variable is on the left of `=` and an expression is on the right.
 
@@ -474,7 +473,7 @@ v++         // same as v = v + 1; v becomes 2
 v--         // same as v = v - 1; v becomes 1
 ```
 
-#### 2.4.1 Tuple Assignment
+### 2.4.1 Tuple Assignment
 
 Tuple assignment lets you assign values to multiple variables in a single statement. All right-hand side expressions are evaluated before any variables are updated, which is useful when variables appear on both sides, such as in swaps:
 
@@ -535,7 +534,7 @@ _, err = io.Copy(dst, src)      // ignore byte count
 _, ok = x.(T)                   // check type, discard result
 ```
 
-#### 2.4.2 Assignability
+### 2.4.2 Assignability
 
 Assignment statements are explicit assignments, but assignments also happen implicitly in several cases:
 
@@ -563,7 +562,7 @@ Constants have more flexible assignability rules, often avoiding explicit conver
 
 Comparability (`==` and `!=`) is related to assignability: in a comparison, one operand must be assignable to the other’s type.
 
-#### 2.5 Type Declarations
+## 2.5 Type Declarations
 
 A variable’s type defines what values it can hold, how those values are stored, what operations are valid, and which methods are available.
 
@@ -651,7 +650,7 @@ fmt.Printf("%g\n", c)           // "100" — does not call String
 fmt.Println(float64(c))         // "100" — does not call String
 ```
 
-#### 2.6 Packages and Files
+## 2.6 Packages and Files
 
 In Go, packages serve the same role as libraries or modules in other languages. They provide modularity, encapsulation, separate compilation, and reuse. A package’s source code is stored in one or more `.go` files, typically within a directory whose name matches its import path. For example, the files for the `gopl.io/ch1/helloworld` package are found in `$GOPATH/src/gopl.io/ch1/helloworld`.
 
@@ -716,7 +715,7 @@ A package-level doc comment should be placed immediately before the package decl
 - [tempconv/tempconv.go](ch02/2.6/tempconv/tempconv.go)
 - [tempconv/conv.go](ch02/2.6/tempconv/conv.go)
 
-##### 2.6.1 Imports
+### 2.6.1 Imports
 
 Within a Go program, each package is identified by an import path, the string that appears in an `import` declaration such as `"gopl.io/ch2/tempconv"`. The Go specification doesn’t define the meaning of these strings; tools like the `go` command interpret them. With the `go` tool, an import path corresponds to a directory containing one or more `.go` files that form the package.
 

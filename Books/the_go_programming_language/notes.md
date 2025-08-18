@@ -36,7 +36,7 @@ go build -x -v hello.go                 // Build the program with verbose output
 go doc http.Get                         // Show documentation for the http.Get function
 ```
 <!-- omit in toc -->
-## Book Notes
+## My Notes
 
 - [Chapter 1: Tutorial](ch01/notes.md)
   - [1.2 - Command-Line Arguments](ch01/notes.md#12-command-line-arguments)
@@ -47,6 +47,18 @@ go doc http.Get                         // Show documentation for the http.Get f
   - [1.7 A Web Server](ch01/notes.md#17-a-web-server)
   - [1.8 Loose Ends](ch01/notes.md#18-loose-ends)
 - [Chapter 2: Program Structure](ch02/notes.md)
+  - [2.1 Names](ch02/notes.md#21-names)
+  - [2.2 Declarations](ch02/notes.md#22-declarations)
+  - [2.3 Variables](ch02/notes.md#23-variables)
+    - [2.3.1 Short Variable Declarations](ch02/notes.md#231-short-variable-declarations)
+    - [2.3.2 Pointers](ch02/notes.md#232-pointers)
+    - [2.3.3 The `new` Function](ch02/notes.md#233-the-new-function)
+    - [2.3.4 Lifetime of Variables](ch02/notes.md#234-lifetime-of-variables)
+    - [2.4.1 Tuple Assignment](ch02/notes.md#241-tuple-assignment)
+    - [2.4.2 Assignability](ch02/notes.md#242-assignability)
+  - [2.5 Type Declarations](ch02/notes.md#25-type-declarations)
+  - [2.6 Packages and Files](ch02/notes.md#26-packages-and-files)
+    - [2.6.1 Imports](ch02/notes.md#261-imports)
 - [Chapter 10: The `go` Tool](ch10/notes.md)
 
 ## Overview and History of Go
